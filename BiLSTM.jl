@@ -1,45 +1,33 @@
 using Flux
-function BiLSTM(data, Forward, Backward)
-    '''
-    normally BatchFirst is false,so we have
-    data (SequenceLength,EmbeddingSize,BatchSize) Array{Float64,3}
-    Forward and Backward are LSTM funcs (EmbedingSize, HiddenSize)
-    output SequenceLength x (HiddenSizex2, BatchSize) Array{TrackedArray{…,Array{Float64,2}},1}
-    '''
+function BiLSTM(data, EmbeddingSize, HiddenSize)
+    """
+    data(SeqLen,EmbeddingSize,BatchSize)
+    Outputs(SeqLen, HiddenSizex2, BatchSize)
+    """
     SeqLen = size(data, 1)
     BatchSize = size(data, 3)
+    Forward = LSTM(EmbeddingSize, HiddenSize)
+    Backward = LSTM(EmbeddingSize, HiddenSize)
     DataForward = [data[i,:,:] for i in 1:SeqLen]
     DataBackward = [data[i,:,:] for i in SeqLen:-1:1]
     ForwardOutput = Forward.(DataForward)
     BackwardOutput = Backward.(DataBackward)
-    HiddenSize = size(Forward.cell.Wh, 2)
-    Outputs = [ [ForwardOutput[i];BackwardOutput[i]] for i in 1:SeqLen]
-    return Outputs
-    '''
-    if you want 3 dimimension array (SequenceLength ,HiddenSizex2, BatchSize)
-    use the code below
     Outputs = []
     for i in 1:SeqLen
-        append!(Outputs, [[ForwardOutput[i];BackwardOutput[i]]])
+        append!(Outputs, [ForwardOutput[i];BackwardOutput[i]])
     end
-    still need to test
-    '''
+    Outputs = reshape(Outputs, (HiddenSize * 2, BatchSize, SeqLen))
+    Outputs = permutedims(Outputs, [3,1,2])
+    return Outputs
 end
 
-'''
+"""
+Julia优先填充最后一个维度为目标，所以最小的单元放在第一个维度
 example
-
-'''
-SeqLen = 9
-BatchSize = 7
+SeqLen = 2
+BatchSize = 5
 EmbeddingSize = 2
-LSTM(2,3)
 HiddenSize = 3
-'''
-#include('BiLSTM.jl')
-data = rand(9,2,7)
-Forward = LSTM(2,3)
-Backward = LSTM(2,3)
-BiLSTM(data, Forward, Backward)
-9x(6,7)
-'''
+data = rand(SeqLen,EmbeddingSize,BatchSize)
+a = BiLSTM(data, EmbeddingSize, HiddenSize)
+"""
