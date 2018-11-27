@@ -25,7 +25,7 @@ function Minibatch(data_dict, batch_size, num_words, num_labels)
     n1=size(row_sum)[1]
     m1=size(row_sum)[2]
     idx=m1
-    null=batch_size
+    null=2*batch_size
     #print(row_sum)
     for i in 0:m1-1
         if(row_sum[n1, idx]!=null)
@@ -72,7 +72,7 @@ function Readfile()
     return training_dict, testing_dict, word_dict, label_dict
 end
 
-batch_size=100
+batch_size=500
 
 training_dict, testing_dict, word_dict, label_dict = Readfile()
 mini_x, mini_y = Minibatch(training_dict, batch_size, length(word_dict), length(label_dict))
