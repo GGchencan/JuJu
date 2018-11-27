@@ -3,6 +3,7 @@ using Flux: onehot, onehotbatch, crossentropy, reset!, throttle, @epochs, @show
 using Flux.Optimise: SGD
 using BSON: @save, @load
 include("Loader.jl")
+include("BiLSTM.jl")
 
 """
 Get cleaned voc which counts at leat min_freq
@@ -42,12 +43,16 @@ function ChangeDim(dim)
     x -> permutedims(x, dim)
 end
 
+function BILSTM(EmbeddingSize, HiddenSize)
+    x -> BiLSTM(x, EmbeddingSize, HiddenSize)
+end
+
 model = Chain(
     LowerDim(dic_size),
     Dense(dic_size, ebemd_size),
     UpperDim(ebemd_size, batch_size),
     ChangeDim([2, 3, 1]),
-    Bi_LSTM(seq_len, ebemd_size, hidden_size),
+    Bi_LSTM(ebemd_size, hidden_size),
     ChangeDim([3, 1, 2]),
     LowerDim(hidden_size),
     Dense(hidden_size, class_num),
