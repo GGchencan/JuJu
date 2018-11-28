@@ -55,8 +55,8 @@ model = Chain(
     ChangeDim([2, 3, 1]),
     BILSTM(ebemd_size, hidden_size),
     ChangeDim([3, 1, 2]),
-    LowerDim(hidden_size),
-    Dense(hidden_size, class_num),
+    LowerDim(hidden_size * 2),
+    Dense(hidden_size * 2, class_num),
     softmax)
 
 
@@ -109,3 +109,4 @@ println("epoch loss is  ", loss(testX, testY))
 # @epochs epoch_size Flux.train!(loss, zip(trainX, trainY), opt, cb = throttle(evalcb_batch, 60))
 
 save_model(model_fn)
+
