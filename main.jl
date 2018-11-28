@@ -52,7 +52,7 @@ model = Chain(
     Dense(dic_size, ebemd_size),
     UpperDim(ebemd_size, batch_size),
     ChangeDim([2, 3, 1]),
-    Bi_LSTM(ebemd_size, hidden_size),
+    BILSTM(ebemd_size, hidden_size),
     ChangeDim([3, 1, 2]),
     LowerDim(hidden_size),
     Dense(hidden_size, class_num),
