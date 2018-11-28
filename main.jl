@@ -11,13 +11,13 @@ add unk eos pad to dict
 """
 epoch_size = 1
 batch_size = 20
-ebemd_size = 10
-hidden_size = 10
+ebemd_size = 30
+hidden_size = 30
 input_fn = "a"
 min_freq = 0
-model_fn = "b"
+model_fn = "model.data"
 
-traindata, testdata, dic, label_dic = Readfile(input_fn, min_freq)
+traindata, testdata, dic, label_dic = Readfile()
 dic_size = length(dic)
 class_num = length(label_dic)
 
@@ -30,6 +30,7 @@ batch_size * seq_len * dic_size
 
 trainX, trainY = Minibatch(traindata, batch_size, dic_size, class_num)
 testX, testY = Minibatch(testdata, batch_size, dic_size, class_num)
+
 
 function LowerDim(dim)
     x -> reshape(x, (:, dim))'
@@ -63,14 +64,14 @@ function loss(x, y)
     l = crossentropy(model(x), LowerDim(class_num)(y))
     # print('loss ', l)
     Flux.truncate!(model)
-    # @show l
+    @show(l)
     return l
 end
 
 
 function save_model(model_fn)
     if model_fn == false
-        @save "model-$(now()).bson" model
+        @save "model.bson" model
     else
         @save model_fn model
     end
@@ -95,10 +96,15 @@ end
 lr = 0.1
 opt = SGD(params(model), lr)
 
-for i = 1 : epoch_size
-    Flux.train!(loss, zip(allX, allY), opt, cb = throttle(evalcb_batch, 60))
-    # println(i, "epoch loss is  ", sum(loss.(testX, testY)))
-end
+allX = repeat([trainX], 5)
+allY = repeat([trainY], 5)
+
+
+# for i = 1 : epoch_size
+# Flux.train!(loss, zip(allX, allY), opt, cb = throttle(evalcb_batch, 60))
+Flux.train!(loss, zip(allX, allY), opt, cb = evalcb_batch)
+println("epoch loss is  ", loss(testX, testY))
+# end
 
 # @epochs epoch_size Flux.train!(loss, zip(trainX, trainY), opt, cb = throttle(evalcb_batch, 60))
 

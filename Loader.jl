@@ -49,20 +49,20 @@ function Readfile()
     testing_dict=Dict()
     ##please note the index in julia strating at 1, the same as matlab.
     ##a=[1, 2]. a[1]=1 and a[2]=2
-    training_dict['x']=DelimitedFiles.readdlm("trn_x.txt", ' ', Int)
-    training_dict['y']=DelimitedFiles.readdlm("trn_y.txt", ' ', Int)
-    testing_dict['x']=DelimitedFiles.readdlm("test_x.txt", ' ', Int)
-    testing_dict['y']=DelimitedFiles.readdlm("test_y.txt", ' ', Int)
+    training_dict['x']=DelimitedFiles.readdlm("D:\\Julia_AI_123\\trn_x.txt", ' ', Int)
+    training_dict['y']=DelimitedFiles.readdlm("D:\\Julia_AI_123\\trn_y.txt", ' ', Int)
+    testing_dict['x']=DelimitedFiles.readdlm("D:\\Julia_AI_123\\test_x.txt", ' ', Int)
+    testing_dict['y']=DelimitedFiles.readdlm("D:\\Julia_AI_123\\test_y.txt", ' ', Int)
 
     word_dict=Dict() ##map interger to word
     label_dict=Dict() ##map interger to label
-    open("word_dict.txt") do f
+    open("D:\\Julia_AI_123\\word_dict.txt") do f
         for l in eachline(f)
             arr=split(l)
             word_dict[arr[1]]=parse(Int, arr[2])
         end
     end
-    open("label_dict.txt") do f
+    open("D:\\Julia_AI_123\\label_dict.txt") do f
         for l in eachline(f)
             arr=split(l)
             label_dict[arr[1]]=parse(Int, arr[2])
@@ -71,9 +71,9 @@ function Readfile()
     #print(word_dict["EOF"])
     return training_dict, testing_dict, word_dict, label_dict
 end
-
-batch_size=500
-
-training_dict, testing_dict, word_dict, label_dict = Readfile()
-mini_x, mini_y = Minibatch(training_dict, batch_size, length(word_dict), length(label_dict))
-print("size of input x matrix: ", size(mini_x), " it has type", typeof(mini_x), '\n', "size of input y matrix: ", size(mini_y), " it has type", typeof(mini_y))
+#
+# batch_size=500
+#
+# training_dict, testing_dict, word_dict, label_dict = Readfile()
+# mini_x, mini_y = Minibatch(testing_dict, batch_size, length(word_dict), length(label_dict))
+# print("size of input x matrix: ", size(mini_x), " it has type", typeof(mini_x), '\n', "size of input y matrix: ", size(mini_y), " it has type", typeof(mini_y))
