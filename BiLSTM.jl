@@ -12,12 +12,11 @@ function BiLSTM(data, EmbeddingSize, HiddenSize)
     DataBackward = [data[i,:,:] for i in SeqLen:-1:1]
     ForwardOutput = Forward.(DataForward)
     BackwardOutput = Backward.(DataBackward)
-    Outputs = []
-    for i in 1:SeqLen
-        append!(Outputs, [ForwardOutput[i];BackwardOutput[i]])
+    Outputs = [ForwardOutput[1];BackwardOutput[1]]
+    for i in 2:SeqLen
+        Outputs = cat(Outputs,[ForwardOutput[i];BackwardOutput[i]]; dims = 3)
     end
-    Outputs = reshape(Outputs, (HiddenSize * 2, BatchSize, SeqLen))
-    Outputs = permutedims(Outputs, [3,1,2])
+    Outputs = permutedims(Outputs, [3, 1,2])
     return Outputs
 end
 
@@ -31,3 +30,6 @@ HiddenSize = 3
 data = rand(SeqLen,EmbeddingSize,BatchSize)
 a = BiLSTM(data, EmbeddingSize, HiddenSize)
 """
+
+
+
