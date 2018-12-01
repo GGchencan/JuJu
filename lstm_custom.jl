@@ -52,9 +52,8 @@ Assuming you have a `Recur` layer `rnn`, this is roughly equivalent to
 
     rnn.state = hidden(rnn.cell)
 """
-reset!(m) = prefor(x -> x isa Recur && (x.state = x.init), m)
 
-flip(f, xs) = reverse(f.(reverse(xs)))
+
 
 
 mutable struct LSTMCell{A,V}
@@ -112,7 +111,7 @@ end
 # Assuming that the h is shaped like (N, 2*h), c is shaped like (N, 2*h), x is shaped like((N, in),(N, in))
 function (m::BiLSTMCell)((h,c),x)
   out_dim = size(h, 2) / 2
-  out_dim = 30
+  out_dim = Int(out_dim)
   in_dim = size(x[1],2)
   forward_h = h[:, gate(out_dim, 1)]
   forward_h = permutedims(forward_h, [2, 1])
@@ -177,7 +176,7 @@ end
 MyBiLSTM(in::Integer,out::Integer)= MyBiLSTM( RawBiLSTM(in,out))
 
 add_dim(x) = reshape(x, (1, size(x)...))
-function (m::MyBiLSTM)(data; batch_first::Bool=false)
+function (m::MyBiLSTM)(data; batch_first::Bool=true)
   # Assuming that data is shaped like (batch, seq_len, dim) if batch_first is True or the shape is like (seq_len, batch, dim)
   if batch_first
     data = permutedims(data,[2,1,3])
