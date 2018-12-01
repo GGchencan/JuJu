@@ -10,7 +10,7 @@ Get cleaned voc which counts at leat min_freq
 add unk eos pad to dict
 """
 epoch_size = 1
-batch_size = 10
+batch_size = 500
 ebemd_size = 256
 hidden_size = 128
 # min_freq = 0
@@ -26,9 +26,6 @@ println(class_num)
 Get train/test batch data
 batch_size * seq_len * dic_size
 """
-
-# trainX, trainY = Minibatch(traindata, batch_size, dic_size, class_num)
-# testX, testY = Minibatch(testdata, batch_size, dic_size, class_num)
 
 
 function LowerDim(dim)
@@ -51,7 +48,7 @@ model = Chain(
     LowerDim(dic_size),
     Dense(dic_size, ebemd_size),
     UpperDim(ebemd_size, batch_size),
-    # MyBiLSTM(ebemd_size, hidden_size),
+    MyBiLSTM(ebemd_size, hidden_size),
     LowerDim(hidden_size * 2),
     Dense(hidden_size * 2, class_num),
     softmax
@@ -91,19 +88,16 @@ lr = 0.1
 opt = SGD(params(model), lr)
 
 
-data = Minibatches(traindata, batch_size, dic_size, class_num, 3)
-# for d in data
-#     print(typeof(d[1]))
-#     print(size(d[2]))
-#     print(size(model(d[1])))
-#     print(size(LowerDim(class_num)(d[2])))
-#     break
-# end
-
-# for i = 1 : epoch_size
-#     Flux.train!(loss, data, opt)
-# end
+data = Minibatches(traindata, batch_size, dic_size, class_num, 1000)
 for d in data
     Flux.train!(loss, [d], opt)
 end
-@save "mymodel.bson" model
+
+test = Minibatch(testdata, batch_size, dic_size, class_num, 1000)
+
+for d in test
+    x = d[1]
+    print(size(UpperDim(class_num, batch_size)(model(x))))
+    print(size(d[2]))
+    break
+end
