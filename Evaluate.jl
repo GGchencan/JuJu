@@ -49,13 +49,15 @@ end
 
 #function  countChunks(trueSeqs,predictSeqs)
 function countChunks(trueSeqs, predictSeqs)
+    tagString = ["O", "B-PER","I-PER","B-LOC","I-LOC","B-ORG","I-ORG","B-MISC","I-MISC"]
     evaluate = zeros(3) #correct trueChunks predChunks
     correctChunk = "None"
     prevPredPrefix = "O"
     prevTruePrefix = "O"
     for i in 1:length(predictSeqs)
-        trueTag = trueSeqs[i]
-        predTag = predictSeqs[i]
+        #println(length(predictSeqs))
+        trueTag = tagString[trueSeqs[i]]
+        predTag = tagString[predictSeqs[i]]
         truePrefix , trueType = splitTag(trueTag)
         PredPrefix , predType = splitTag(predTag)
         #println(trueType)
@@ -65,7 +67,8 @@ function countChunks(trueSeqs, predictSeqs)
             predEnd = endOfChunk(prevPredPrefix, PredPrefix)
             #println(trueEnd)
             #println("**************")
-            if predEnd & trueEnd
+            #if predEnd & trueEnd
+            if  trueEnd
                 evaluate[1] += 1
                 correctChunk = "None"
             elseif (predEnd != trueEnd) | (trueType != predType)
@@ -93,59 +96,27 @@ function countChunks(trueSeqs, predictSeqs)
     end
     #println(evaluate)
     P = evaluate[1]/evaluate[3]
-
+    
     #println("**************")
     R = evaluate[1]/evaluate[2]
+
     #println("**************")
     F_1 = 2*P*R / (P+R)
     #println(F_1)
-    return F_1
+    return (P, R, F_1,evaluate[1],evaluate[2],evaluate[3])
 end
 
-"""
-Split string
-"""
-function splitString(iter)
-    seqs = [];
-    for line in iter
-        seq = split(line)
-        #println(length(seq))
-        for i in 1:length(seq)
-            push!(seqs,seq[i])
-        end
-    end
-#    println(seqs)
-    return seqs
-end
 
-"""
-checks if a chunk started between the previous and current word;
-"""
-function startOfChunk(prevTag, tag)
-  chunkStart = (((prevTag == "B") & (tag == "B"))
-    |((prevTag == "I") & (tag == "B"))
-    | ((prevTag == "O") & (tag == "B")) )
-return chunkStart
 
-"""
-checks if a chunk ended between the previous and current word;
-"""
-function endOfChunk(prevTag, tag)
-  chunkEnd = (((prevTag == "B") & (tag == "B")) |((prevTag == "I") & (tag == "B"))
-              | ((prevTag == "O") & (tag == "B")) | ((prevTag == "B") & (tag == "O"))
-               |((prevTag == "I") & (tag == "O")) | ((prevTag == "O") & (tag == "O")))
-  return chunkEnd
-end
-end
 
-function main(True,Predict)
-    trueSeqs = splitString(True)
-    predictSeqs = splitString(Predict)
-    #println(trueSeqs)
-    #println("**************")
-    #println(predictSeqs)
-    #println("**************")
 
-    return countChunks(trueSeqs,predictSeqs )
-    #println(f1)
-end
+
+
+
+
+
+#tagString = ["O", "B-PER","I-PER","B-LOC","I-LOC","B-ORG","I-ORG","B-MISC","I-MISC"]
+trueSeqs = [1 2 2 4 5;6  7 8 9 1]
+predictSeqs = [1 2 3 4 4;5 7 8 9 1]
+f1 =  countChunks(trueSeqs,predictSeqs)
+println(f1)
