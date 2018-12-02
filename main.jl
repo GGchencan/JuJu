@@ -2,17 +2,20 @@ using Flux
 using Flux: onehot, onehotbatch, crossentropy, reset!, throttle, @epochs, @show
 using Flux.Optimise: SGD
 using BSON: @save, @load
+using Plots
+
 include("Loader.jl")
 include("lstm_custom.jl")
+include("PredictLabel.jl")
 
 """
 Get cleaned voc which counts at leat min_freq
 add unk eos pad to dict
 """
 epoch_size = 1
-batch_size = 500
-ebemd_size = 256
-hidden_size = 128
+batch_size = 100
+ebemd_size = 100
+hidden_size = 100
 # min_freq = 0
 model_fn = "final_model.bson"
 
@@ -88,16 +91,60 @@ lr = 0.1
 opt = SGD(params(model), lr)
 
 
-data = Minibatches(traindata, batch_size, dic_size, class_num, 1000)
+#data = Minibatches(traindata, batch_size, dic_size, class_num, 1000)
+data = One_Epoch(traindata, batch_size, dic_size, class_num)
+#LossHistory = []
 for d in data
+    """
+    add test while training
+    """
+    x = d[1]
+    output = UpperDim(class_num, batch_size)(model(x))
+    predict = PredictLabel(output.data)
+    truth = PredictLabel(d[2])
+    print("accuray is \n")
+    print(countChunks(predict, truth))
+
     Flux.train!(loss, [d], opt)
+    #LossHistory = vcat(LossHistory, loss(d[1],d[2]).data)
 end
 
-test = Minibatch(testdata, batch_size, dic_size, class_num, 1000)
 
+"""
+
+plotly() # Choose the Plotly.jl backend for web interactivity
+plot(LossHistory,linewidth=2,title="Train Loss")
+"""
+
+"""
+img saved in:
+C:\Users\v-checan\AppData\Local\Temp
+"""
+
+#test = Minibatches(testdata, batch_size, dic_size, class_num, 1000)
+test = One_Epoch(testdata, batch_size, dic_size, class_num)
 for d in test
     x = d[1]
+    """
+    print("here is model info")
+    print(size(model(x)))
+    print(typeof(model(x)))
+
+    print("after tranforming")
     print(size(UpperDim(class_num, batch_size)(model(x))))
+    print(typeof(UpperDim(class_num, batch_size)(model(x))))
+
+
+    print("label info")
     print(size(d[2]))
+    print(typeof(d[2]))
     break
+    """
+
+    output = UpperDim(class_num, batch_size)(model(x))
+    predict = PredictLabel(output)
+    print(Accuracy(predict, d[2]))
+    print("\n")
+    print("*****************************************************")
 end
+
