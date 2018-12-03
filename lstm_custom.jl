@@ -96,15 +96,14 @@ Base.show(io::IO, l::LSTMCell) =
 
 
 
-mutable struct BiLSTMCell{LSTMCell}
-  forward::LSTMCell
-  backward::LSTMCell
+mutable struct BiLSTMCell{T}
+  forward::T
+  backward::T
 end
 
 function BiLSTMCell(in::Integer,out::Integer;init = Flux.glorot_uniform)
-  cell_forward = LSTMCell(in, out)
-  cell_backward = LSTMCell(in, out)
-  cell = BiLSTMCell(cell_forward, cell_backward)
+  cell = BiLSTMCell(LSTMCell(in, out), LSTMCell(in, out))
+  return cell
 end
 
 
@@ -133,17 +132,17 @@ function (m::BiLSTMCell)((h,c),x)
   c_new = hcat(forward_c_new, backward_c_new)
   return (h_new, c_new), h_new
 end
-
+hidden(m::BiLSTMCell) = (vcat(m.forward.h, m.backward.h), vcat(m.forward.c, m.backward.c))
 Flux.@treelike BiLSTMCell
 
-hidden(m::BiLSTMCell) = (vcat(m.forward.h, m.backward.h), vcat(m.forward.c, m.backward.c))
+
+Base.show(io::IO, l::BiLSTMCell) =
+  print(io, "BiLSTMCell(", size(l.forward.Wi, 2), ", ", size(l.forward.Wi, 1)÷4, ")")
 
 
 
-
-
-mutable struct MyRecur
-  cell
+mutable struct MyRecur{T}
+  cell::T
   init
   state
 end
