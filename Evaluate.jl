@@ -49,7 +49,8 @@ end
 
 #function  countChunks(trueSeqs,predictSeqs)
 function countChunks(trueSeqs, predictSeqs)
-    tagString = ["O", "B-PER","I-PER","B-LOC","I-LOC","B-ORG","I-ORG","B-MISC","I-MISC"]
+    #tagString = ["O", "B-PER","I-PER","B-LOC","I-LOC","B-ORG","I-ORG","B-MISC","I-MISC"]
+    tagString = ["B-ORG", "O", "B-MISC", "B-PER","I-PER","B-LOC","I-ORG","I-MISC","I-LOC"]
     evaluate = zeros(3) #correct trueChunks predChunks
     correctChunk = "None"
     prevPredPrefix = "O"
@@ -96,7 +97,7 @@ function countChunks(trueSeqs, predictSeqs)
     end
     #println(evaluate)
     P = evaluate[1]/evaluate[3]
-    
+
     #println("**************")
     R = evaluate[1]/evaluate[2]
 
@@ -115,8 +116,9 @@ end
 
 
 
-#tagString = ["O", "B-PER","I-PER","B-LOC","I-LOC","B-ORG","I-ORG","B-MISC","I-MISC"]
-trueSeqs = [1 2 2 4 5;6  7 8 9 1]
-predictSeqs = [1 2 3 4 4;5 7 8 9 1]
+#tagString = ["B-ORG", "O", "B-MISC", "B-PER","I-PER","B-LOC","I-ORG","I-MISC","I-LOC"]
+trueSeqs = [2 2 2 2 2;2  2 2 2 3]
+predictSeqs = [1 2 3 4 4;5 7 8 9 3]
 f1 =  countChunks(trueSeqs,predictSeqs)
 println(f1)
+
