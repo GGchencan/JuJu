@@ -68,8 +68,8 @@ function countChunks(trueSeqs, predictSeqs)
             predEnd = endOfChunk(prevPredPrefix, PredPrefix)
             #println(trueEnd)
             #println("**************")
-            #if predEnd & trueEnd
-            if  trueEnd
+            if predEnd & trueEnd
+            #if  trueEnd
                 evaluate[1] += 1
                 correctChunk = "None"
             elseif (predEnd != trueEnd) | (trueType != predType)
