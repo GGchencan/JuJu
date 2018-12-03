@@ -1,10 +1,26 @@
 """
 Usage:
+
 include("Evaluate.jl")
 True = ["B-Pre I-Pre O O","O O  B-Pre B-Loc"]
 Predict = ["B-Pre I-Pre O O","O O  B-Pre I-Pre"]
 f1 = main(True,Predict)
 println(f1)
+
+example1:
+#tagString = ["B-ORG", "O", "B-MISC", "B-PER","I-PER","B-LOC","I-ORG","I-MISC","I-LOC"]
+trueSeqs =    [1 7 2 6 2;2 2 2 2 3]
+predictSeqs = [1 2 3 4 4;5 7 8 9 3]
+(0.2, 0.3333333333333333, 0.25, 1.0, 3.0, 5.0)
+example2:
+trueSeqs =    [1 1 1 1 1 ;2 2 2 2 2]
+predictSeqs = [1 2 1 2 1 ;2 2 2 2 2 ]
+(1.0, 0.6, 0.7499999999999999, 3.0, 5.0, 3.0)
+
+example3:
+trueSeqs =    [2 2 2 2 2;2 2 2 2 3]
+predictSeqs = [2 2 2 2 2;2  2 2 2 3]
+(1.0, 1.0, 1.0, 1.0, 1.0, 1.0)
 
 """
 
