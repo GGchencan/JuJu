@@ -11,6 +11,9 @@ function PredictLabelOneDim(Data)
             MaxVal = Data[i]
         end
     end
+    if Index == 10
+        Index = 2
+    end
     return Index
 end
 
