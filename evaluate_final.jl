@@ -1,9 +1,10 @@
 """
 Usage:
-include("Evaluate.jl")
-True = ["B-Pre I-Pre O O","O O  B-Pre B-Loc"]
-Predict = ["B-Pre I-Pre O O","O O  B-Pre I-Pre"]
-f1 = main(True,Predict)
+
+trueSeqs =    [1 7 2 3 8;2 6 9 2 3]'
+predictSeqs = [1 1 2 3 3;2 6 6 2 3]'
+
+f1 = countChunks(trueSeqs,predictSeqs)
 println(f1)
 
 
@@ -29,7 +30,7 @@ input:
 trueSeqs =    [1 1 1 1 1 ;2 2 2 2 2]'
 predictSeqs = [1 2 1 2 1 ;2 2 2 2 2 ]'
 output:
-(0.3333333333333333, 0.2, 0.25, 1.0, 5.0, 3.0)
+(0.3333333333333333, 0.2, 0.25, 3.0, 5.0, 3.0)
 
 
 example4:
@@ -37,7 +38,7 @@ input:
 trueSeqs =    [1 1 1 1 1 ;2 2 2 2 2;1 7 2 3 8;2 6 9 2 3;1 7 2 6 2;2 2 2 2 3]'
 predictSeqs = [1 2 1 2 1 ;2 2 2 2 2 ;1 1 2 3 3;2 6 6 2 3;1 2 3 4 4;5 7 8 9 3]'
 output:
-(0.2, 0.25, 0.22222222222222224, 3.0, 12.0, 15.0)
+(0.2, 0.25, 0.22222222222222224, 5.0, 12.0, 15.0)
 
 """
 
@@ -111,7 +112,7 @@ function countChunks(trueSeqs, predictSeqs)
 
 
 
-            if predEnd & trueEnd & (prevTrueTag== prevPredTag) & (trueTag  == predTag)
+            if predEnd & trueEnd & (prevTrueTag== prevPredTag) 
             #if  trueEnd
             """
             println("**************")
