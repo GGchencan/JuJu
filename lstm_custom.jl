@@ -101,6 +101,7 @@ mutable struct BiLSTMCell{T}
   backward::T
 end
 
+
 function BiLSTMCell(in::Integer,out::Integer;init = Flux.glorot_uniform)
   cell = BiLSTMCell(LSTMCell(in, out), LSTMCell(in, out))
   return cell
@@ -213,3 +214,15 @@ function (m::MyBiLSTM)(data; batch_first::Bool=true)
 end
 
 Flux.@treelike MyBiLSTM
+
+
+
+function save_cpu(model,filename)
+  model = cpu(model)
+  @save filename model
+end
+
+function load_cpu(model, filename )
+  @load filename model
+end
+  
