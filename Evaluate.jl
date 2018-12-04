@@ -47,6 +47,12 @@ function endOfChunk(prevTag, tag)
 
 end
 
+# ORG: 1, 7
+# MISC: 3, 8
+# PER: 4, 5
+# LOC: 6, 9
+# O: 2
+
 #function  countChunks(trueSeqs,predictSeqs)
 function countChunks(trueSeqs, predictSeqs)
     #tagString = ["O", "B-PER","I-PER","B-LOC","I-LOC","B-ORG","I-ORG","B-MISC","I-MISC"]
@@ -96,6 +102,10 @@ function countChunks(trueSeqs, predictSeqs)
         evaluate[1] += 1
     end
     #println(evaluate)
+    if evaluate[1] == 0
+            return (0, 0, 0,evaluate[1],evaluate[2],evaluate[3])
+    end
+
     P = evaluate[1]/evaluate[3]
 
     #println("**************")
@@ -104,7 +114,7 @@ function countChunks(trueSeqs, predictSeqs)
     #println("**************")
     F_1 = 2*P*R / (P+R)
     #println(F_1)
-    return (P, R, F_1,evaluate[1],evaluate[2],evaluate[3])
+    return (P * 100, R * 100, F_1 * 100,evaluate[1],evaluate[2],evaluate[3])
 end
 
 
@@ -115,10 +125,13 @@ end
 
 
 
-
+# ORG: 1, 7
+# MISC: 3, 8
+# PER: 4, 5
+# LOC: 6, 9
+# O: 2
 #tagString = ["B-ORG", "O", "B-MISC", "B-PER","I-PER","B-LOC","I-ORG","I-MISC","I-LOC"]
-trueSeqs = [2 2 2 2 2;2  2 2 2 3]
-predictSeqs = [1 2 3 4 4;5 7 8 9 3]
-f1 =  countChunks(trueSeqs,predictSeqs)
-println(f1)
-
+# trueSeqs = [2 2 3 8 2;2 2 2 2 3]
+# predSeqs = [1 3 8 8 8;5 7 8 9 3]
+# f1 =  countChunks(trueSeqs,predSeqs)
+# println(f1)

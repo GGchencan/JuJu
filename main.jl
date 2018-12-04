@@ -2,20 +2,21 @@ using Flux
 using Flux: onehot, onehotbatch, crossentropy, reset!, throttle, @epochs, @show
 using Flux.Optimise: SGD
 using BSON: @save, @load
-using Plots
+# using Plots
 
 include("Loader.jl")
 include("lstm_custom.jl")
 include("PredictLabel.jl")
+include("Evaluate.jl")
 
 """
 Get cleaned voc which counts at leat min_freq
 add unk eos pad to dict
 """
-epoch_size = 1
+epoch_size = 10
 batch_size = 100
-ebemd_size = 100
-hidden_size = 500
+ebemd_size = 50
+hidden_size = 300
 # min_freq = 0
 model_fn = "final_model.bson"
 
@@ -86,69 +87,31 @@ function load_model(checkpoint_fn)
     @load checkpoint_fn model
 end
 
+# @save "model.bson" model
+# @load "model.bson" model
 
-lr = 0.001
+
+lr = 0.005
 opt = SGD(params(model), lr)
 
 
 #data = Minibatches(traindata, batch_size, dic_size, class_num, 1000)
-data = One_Epoch(traindata, batch_size, dic_size, class_num)
-#LossHistory = []
-for d in data
-    """
-    add test while training
-    """
-    x = d[1]
-    output = UpperDim(class_num, batch_size)(model(x))
-    predict = PredictLabel(output.data)
-    truth = PredictLabel(d[2])
-    print("accuray is \n")
-    print(countChunks(truth,predict))
 
-    Flux.train!(loss, [d], opt)
-    #LossHistory = vcat(LossHistory, loss(d[1],d[2]).data)
-end
-
-
-"""
-plot(LossHistory,linewidth=2,title="Train Loss")
-loss1 = [1,2,3,4]
-loss2 = [2,4,6,8]
-loss3 = [3,6,9,12]
-plot([loss1,loss2,loss3],marker = ([:octagon :star7 :square],9),
-label = ["loss1" "loss2" "loss3"], title = "myplot", xlabel = "time", ylabel = "loss")
-
-line = (:scatter)
-"""
-
-"""
-img saved in:
-C:\Users\v-checan\AppData\Local\Temp
-"""
-
-#test = Minibatches(testdata, batch_size, dic_size, class_num, 1000)
 test = One_Epoch(testdata, batch_size, dic_size, class_num)
-for d in test
-    x = d[1]
-    """
-    print("here is model info")
-    print(size(model(x)))
-    print(typeof(model(x)))
+testd = data(1)
 
-    print("after tranforming")
-    print(size(UpperDim(class_num, batch_size)(model(x))))
-    print(typeof(UpperDim(class_num, batch_size)(model(x))))
-
-
-    print("label info")
-    print(size(d[2]))
-    print(typeof(d[2]))
-    break
-    """
-
-    output = UpperDim(class_num, batch_size)(model(x))
-    predict = PredictLabel(output)
-    print(Accuracy(predict, d[2]))
-    print("\n")
-    print("*****************************************************")
+#LossHistory = []
+for i = 1 : epoch_size
+    println("epoch ", i)
+    data = One_Epoch(traindata, batch_size, dic_size, class_num)
+    for d in data
+        Flux.train!(loss, [d], opt)
+        #LossHistory = vcat(LossHistory, loss(d[1],d[2]).data)
+        x = testd[1]
+        output = UpperDim(class_num, batch_size)(model(x))
+        predict = PredictLabel(output.data)
+        truth = PredictLabel(testd[2])
+        print("accuray is \n")
+        print(countChunks(truth,predict))
+    end
 end

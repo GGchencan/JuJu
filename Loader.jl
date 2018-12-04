@@ -101,14 +101,14 @@ function Readfile()
     return training_dict, testing_dict, word_dict, label_dict
 end
 
-batch_size=10000
-
-training_dict, testing_dict, word_dict, label_dict = Readfile()
-generator=One_Epoch(training_dict, batch_size, length(word_dict), length(label_dict))
-for arr in generator
-    mini_trn_x=arr[1]
-    mini_trn_y=arr[2]
-
-    print("size of input x matrix: ", size(mini_trn_x), " it has type", typeof(mini_trn_x), '\n', "size of input y matrix: ", size(mini_trn_y), " it has type", typeof(mini_trn_y), '\n')
-
-end
+# batch_size=10000
+#
+# training_dict, testing_dict, word_dict, label_dict = Readfile()
+# generator=One_Epoch(training_dict, batch_size, length(word_dict), length(label_dict))
+# for arr in generator
+#     mini_trn_x=arr[1]
+#     mini_trn_y=arr[2]
+#
+#     print("size of input x matrix: ", size(mini_trn_x), " it has type", typeof(mini_trn_x), '\n', "size of input y matrix: ", size(mini_trn_y), " it has type", typeof(mini_trn_y), '\n')
+#
+# end
