@@ -1,3 +1,59 @@
+<<<<<<< HEAD
+=======
+"""
+Usage:
+
+trueSeqs =    [1 7 2 3 8;2 6 9 2 3]'
+predictSeqs = [1 1 2 3 3;2 6 6 2 3]'
+
+f1 = countChunks(trueSeqs,predictSeqs)
+println(f1)
+
+
+example1:
+input:
+#tagString = ["B-ORG", "O", "B-MISC", "B-PER","I-PER","B-LOC","I-ORG","I-MISC","I-LOC"]
+trueSeqs =    [1 7 2 3 8;2 6 9 2 3]'
+predictSeqs = [1 1 2 3 3;2 6 6 2 3]'
+ouput:
+(0.14285714285714285, 0.25, 0.18181818181818182, 1.0, 4.0, 7.0)
+
+
+example2:
+input:
+trueSeqs =    [1 7 2 6 2;2 2 2 2 3]'
+predictSeqs = [1 2 3 4 4;5 7 8 9 3]'
+output:
+(0.2, 0.3333333333333333, 0.25, 1.0, 3.0, 5.0)
+
+
+example3:
+input:
+trueSeqs =    [1 1 1 1 1 ;2 2 2 2 2]'
+predictSeqs = [1 2 1 2 1 ;2 2 2 2 2 ]'
+output:
+(0.3333333333333333, 0.2, 0.25, 3.0, 5.0, 3.0)
+
+
+example4:
+input:
+trueSeqs =    [1 1 1 1 1 ;2 2 2 2 2;1 7 2 3 8;2 6 9 2 3;1 7 2 6 2;2 2 2 2 3]'
+predictSeqs = [1 2 1 2 1 ;2 2 2 2 2 ;1 1 2 3 3;2 6 6 2 3;1 2 3 4 4;5 7 8 9 3]'
+output:
+(0.2, 0.25, 0.22222222222222224, 5.0, 12.0, 15.0)
+
+"""
+
+
+
+"""
+split chunk tag into IOBES prefix and chunk_type
+e.g.
+B-PER -> (B, PER)
+O -> (O, None)
+"""
+
+>>>>>>> 32e7a8131b12195b8955399710d9e627666c3eed
 function splitTag(chunkTag)
     if chunkTag == "O"
         return ("O","None")
