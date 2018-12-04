@@ -216,6 +216,8 @@ end
 Flux.@treelike MyBiLSTM
 
 
+# save_cpu(model,"model")
+# load_cpu(model,"model")
 
 function save_cpu(model,filename)
   model = cpu(model)
@@ -225,4 +227,3 @@ end
 function load_cpu(model, filename )
   @load filename model
 end
-  
