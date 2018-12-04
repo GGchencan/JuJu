@@ -1,13 +1,13 @@
 using Flux
 using Flux: onehot, onehotbatch, crossentropy, reset!, throttle, @epochs, @show
 using Flux.Optimise: SGD
-using BSON: @save, @load
+# using BSON: @save, @load
 # using Plots
 
 include("Loader.jl")
 include("lstm_custom.jl")
 include("PredictLabel.jl")
-include("Evaluate.jl")
+include("evaluate_final.jl")
 
 """
 Get cleaned voc which counts at leat min_freq
@@ -17,7 +17,6 @@ epoch_size = 10
 batch_size = 100
 ebemd_size = 50
 hidden_size = 300
-# min_freq = 0
 model_fn = "final_model.bson"
 
 traindata, testdata, dic, label_dic = Readfile()
@@ -30,8 +29,6 @@ println(class_num)
 Get train/test batch data
 batch_size * seq_len * dic_size
 """
-
-
 function LowerDim(dim)
     x -> reshape(x, (:, dim))'
 end
@@ -59,7 +56,7 @@ model = Chain(
     )
 
 
-function loss(x, y)
+function loss_with_mask(x, y)
     lower_y = LowerDim(class_num)(y)
     dimr = size(lower_y)[1]
     dimc = size(lower_y)[2]
@@ -72,51 +69,37 @@ function loss(x, y)
     return l
 end
 
-
-function save_model(model_fn)
-    if model_fn == false
-        @save "model.bson" model
-    else
-        @save model_fn model
-    end
-    println("saving model complete.")
+function loss(x, y)
+    lower_y = LowerDim(class_num)(y)
+    l = crossentropy(model(x), lower_y)
+    # print('loss ', l)
+    Flux.truncate!(model)
+    @show(l)
+    return l
 end
-
-
-function evalcb_batch()
-    save_model(false)
-end
-
 
 function load_model(checkpoint_fn)
-    @load checkpoint_fn model
+    load_cpu(model, checkpoint_fn)
 end
-
-# @save "model.bson" model
-# @load "model.bson" model
 
 
 lr = 0.005
 opt = SGD(params(model), lr)
 
-
-#data = Minibatches(traindata, batch_size, dic_size, class_num, 1000)
-
 test = One_Epoch(testdata, batch_size, dic_size, class_num)
 testd = test(1)
 
-#LossHistory = []
 for i = 1 : epoch_size
     println("epoch ", i)
     data = One_Epoch(traindata, batch_size, dic_size, class_num)
     for d in data
         Flux.train!(loss, [d], opt)
-        #LossHistory = vcat(LossHistory, loss(d[1],d[2]).data)
         x = testd[1]
         output = UpperDim(class_num, batch_size)(model(x))
         predict = PredictLabel(output.data)
         truth = PredictLabel(testd[2])
         print("accuray is \n")
-        print(countChunks(truth,predict))
+        print(countChunks(truth',predict'))
     end
+    save_cpu(model, "model")
 end
