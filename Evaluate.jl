@@ -79,6 +79,7 @@ function countChunks(trueSeqs, predictSeqs)
     prevTruePrefix = "O"
     for i in 1:length(predictSeqs)
         #println(length(predictSeqs))
+
         trueTag = tagString[trueSeqs[i]]
         predTag = tagString[predictSeqs[i]]
         truePrefix , trueType = splitTag(trueTag)

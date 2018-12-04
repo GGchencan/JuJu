@@ -60,7 +60,12 @@ model = Chain(
 
 
 function loss(x, y)
-    l = crossentropy(model(x), LowerDim(class_num)(y))
+    lower_y = LowerDim(class_num)(y)
+    dimr = size(lower_y)[1]
+    dimc = size(lower_y)[2]
+    w = ones(dimr, dimc)
+    w[dimr,:] = zeros(dimc)
+    l = crossentropy(model(x), lower_y; weight = w)
     # print('loss ', l)
     Flux.truncate!(model)
     @show(l)
@@ -98,7 +103,7 @@ opt = SGD(params(model), lr)
 #data = Minibatches(traindata, batch_size, dic_size, class_num, 1000)
 
 test = One_Epoch(testdata, batch_size, dic_size, class_num)
-testd = data(1)
+testd = test(1)
 
 #LossHistory = []
 for i = 1 : epoch_size
