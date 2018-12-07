@@ -1,105 +1,113 @@
 using Flux
-using Flux: onehot, onehotbatch, crossentropy, reset!, throttle, @epochs, @show
+using Flux: onehot
+using Flux: onehotbatch
+using Flux: crossentropy
+using Flux: reset!
+using Flux: throttle
+using Flux: @epochs
+using Flux: @show
 using Flux.Optimise: SGD
-# using BSON: @save, @load
-# using Plots
 
-include("Loader.jl")
+include("loader.jl")
 include("lstm_custom.jl")
-include("PredictLabel.jl")
+include("predict_label.jl")
 include("evaluate_final.jl")
 
 """
 Get cleaned voc which counts at leat min_freq
 add unk eos pad to dict
 """
-epoch_size = 10
-batch_size = 100
-ebemd_size = 50
-hidden_size = 300
-model_fn = "final_model.bson"
+EpochSize = 10
+BatchSize = 100
+EmbedSize = 50
+HiddenSize = 300
+ModelFn = "final_model.bson"
 
-traindata, testdata, dic, label_dic = Readfile()
-dic_size = length(dic)
-class_num = length(label_dic)
+TrainData, TestData, Dic, LabelDic = Readfile()
+DicSize = length(Dic)
+ClassNum = length(LabelDic)
 
-println(dic_size)
-println(class_num)
+println(DicSize)
+println(ClassNum)
 """
 Get train/test batch data
 batch_size * seq_len * dic_size
 """
-function LowerDim(dim)
-    x -> reshape(x, (:, dim))'
+function lower_dim(Dim)
+    X -> reshape(X, (:, Dim))'
 end
 
-function UpperDim(ebemd_dim, batch_size)
-    x -> reshape(x', (batch_size, :, ebemd_dim))
+
+function upper_dim(EmbedDim, BatchSize)
+    X -> reshape(X', (BatchSize, :, EmbedDim))
 end
 
-function ChangeDim(dim)
-    x -> permutedims(x, dim)
+
+function change_dim(Dim)
+    X -> permutedims(X, Dim)
 end
 
-function BILSTM(EmbeddingSize, HiddenSize)
-    x -> BiLSTM(x, EmbeddingSize, HiddenSize)
+function BILSTM(EmbedSize, HiddenSize)
+    X -> BiLSTM(X, EmbedSize, HiddenSize)
 end
 
 model = Chain(
-    LowerDim(dic_size),
-    Dense(dic_size, ebemd_size),
-    UpperDim(ebemd_size, batch_size),
-    MyBiLSTM(ebemd_size, hidden_size),
-    LowerDim(hidden_size * 2),
-    Dense(hidden_size * 2, class_num),
+    lower_dim(DicSize),
+    Dense(DicSize, EmbedSize),
+    upper_dim(EmbedSize, BatchSize),
+    MyBiLSTM(EmbedSize, HiddenSize),
+    lower_dim(HiddenSize * 2),
+    Dense(HiddenSize * 2, ClassNum),
     softmax
     )
 
 
-function loss_with_mask(x, y)
-    lower_y = LowerDim(class_num)(y)
-    dimr = size(lower_y)[1]
-    dimc = size(lower_y)[2]
-    w = ones(dimr, dimc)
-    w[dimr,:] = zeros(dimc)
-    l = crossentropy(model(x), lower_y; weight = w)
+function loss_with_mask(X, Y)
+    LowerY = lower_dim(ClassNum)(Y)
+    DimR = size(LowerY)[1]
+    DimC = size(LowerY)[2]
+    W = ones(DimR, DimC)
+    W[DimR,:] = zeros(DimC)
+    L = crossentropy(model(X), LowerY; weight = W)
     # print('loss ', l)
     Flux.truncate!(model)
-    @show(l)
-    return l
+    @show(L)
+    return L
 end
 
-function loss(x, y)
-    lower_y = LowerDim(class_num)(y)
-    l = crossentropy(model(x), lower_y)
+
+function loss(X, Y)
+    LowerY = lower_dim(ClassNum)(Y)
+    L = crossentropy(model(X), LowerY)
     # print('loss ', l)
     Flux.truncate!(model)
-    @show(l)
-    return l
-end
-
-function load_model(checkpoint_fn)
-    load_cpu(model, checkpoint_fn)
+    @show(L)
+    return L
 end
 
 
-lr = 0.005
-opt = SGD(params(model), lr)
+function load_model(CheckPointFn)
+    load_cpu(model, CheckPointFn)
+end
 
-test = One_Epoch(testdata, batch_size, dic_size, class_num)
-testd = test(1)
 
-for i = 1 : epoch_size
+Lr = 0.005
+Opt = SGD(params(model), Lr)
+
+Test = one_epoch(TestData, BatchSize, DicSize, ClassNum)
+Testd = Test(1)
+
+for i = 1 : EpochSize
     println("epoch ", i)
-    data = One_Epoch(traindata, batch_size, dic_size, class_num)
-    for d in data
-        Flux.train!(loss, [d], opt)
-        x = testd[1]
-        output = UpperDim(class_num, batch_size)(model(x))
-        predict = PredictLabel(output.data)
-        truth = PredictLabel(testd[2])
+    Data = one_epoch(TrainData, BatchSize, DicSize, ClassNum)
+    for D in Data
+        Flux.train!(loss, [D], Opt)
+        X = Testd[1]
+        Output = upper_dim(ClassNum, BatchSize)(model(X))
+        Predict = predict_label(Output.data)
+        Truth = predict_label(Testd[2])
         print("accuray is \n")
-        print(countChunks(truth',predict'))
+        print(count_chunks(Truth', Predict'))
     end
     save_cpu(model, "model")
 end
