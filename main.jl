@@ -33,17 +33,17 @@ println(ClassNum)
 Get train/test batch data
 batch_size * seq_len * dic_size
 """
-function LowerDim(Dim)
+function lower_dim(Dim)
     X -> reshape(X, (:, Dim))'
 end
 
 
-function UpperDim(EmbedDim, BatchSize)
+function upper_dim(EmbedDim, BatchSize)
     X -> reshape(X', (BatchSize, :, EmbedDim))
 end
 
 
-function ChangeDim(Dim)
+function change_dim(Dim)
     X -> permutedims(X, Dim)
 end
 
@@ -52,18 +52,18 @@ function BILSTM(EmbedSize, HiddenSize)
 end
 
 model = Chain(
-    LowerDim(DicSize),
+    lower_dim(DicSize),
     Dense(DicSize, EmbedSize),
-    UpperDim(EmbedSize, BatchSize),
+    upper_dim(EmbedSize, BatchSize),
     MyBiLSTM(EmbedSize, HiddenSize),
-    LowerDim(HiddenSize * 2),
+    lower_dim(HiddenSize * 2),
     Dense(HiddenSize * 2, ClassNum),
     softmax
     )
 
 
 function loss_with_mask(X, Y)
-    LowerY = LowerDim(ClassNum)(Y)
+    LowerY = lower_dim(ClassNum)(Y)
     DimR = size(LowerY)[1]
     DimC = size(LowerY)[2]
     W = ones(DimR, DimC)
@@ -77,7 +77,7 @@ end
 
 
 function loss(X, Y)
-    LowerY = LowerDim(ClassNum)(Y)
+    LowerY = lower_dim(ClassNum)(Y)
     L = crossentropy(model(X), LowerY)
     # print('loss ', l)
     Flux.truncate!(model)
@@ -103,7 +103,7 @@ for i = 1 : EpochSize
     for D in Data
         Flux.train!(loss, [D], Opt)
         X = Testd[1]
-        Output = UpperDim(ClassNum, BatchSize)(model(X))
+        Output = upper_dim(ClassNum, BatchSize)(model(X))
         Predict = predict_label(Output.data)
         Truth = predict_label(Testd[2])
         print("accuray is \n")
