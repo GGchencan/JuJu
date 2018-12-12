@@ -103,7 +103,7 @@ function countChunks(trueSeqs, predictSeqs)
         prevTrueTag = trueTag
         prevPredTag  = predTag
     end
-
+find
     if startFlage == true
         evaluate[1] += 1
     end
@@ -121,3 +121,4 @@ predictSeqs = [1 2 1 2 1 ;2 2 2 2 2 ]'
 
 f1 = countChunks(trueSeqs,predictSeqs)
 println(f1)
+S
