@@ -11,7 +11,7 @@ using Flux.Optimise: SGD
 include("loader.jl")
 include("lstm_custom.jl")
 include("predict_label.jl")
-include("evaluate_final.jl")
+include("evaluate.jl")
 
 """
 Get cleaned voc which counts at leat min_freq
