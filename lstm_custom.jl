@@ -1,3 +1,5 @@
+using BSON: @save
+using BSON: @load
 
 gate(h, n) = (1:h) .+ h*(n-1)
 gate(x::AbstractVector, h, n) = x[gate(h,n)]

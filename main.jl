@@ -23,7 +23,7 @@ EmbedSize = 50
 HiddenSize = 300
 ModelFn = "final_model.bson"
 
-TrainData, TestData, Dic, LabelDic = Readfile()
+TrainData, TestData, Dic, LabelDic = read_file()
 DicSize = length(Dic)
 ClassNum = length(LabelDic)
 
