@@ -1,5 +1,6 @@
 """
 Usage:
+use
 trueSeqs =    [1 7 2 3 8;2 6 9 2 3]'
 predictSeqs = [1 1 2 3 3;2 6 6 2 3]'
 f1 = countChunks(trueSeqs,predictSeqs)
