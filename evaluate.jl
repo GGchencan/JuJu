@@ -129,10 +129,3 @@ function countChunks(trueSeqs, predictSeqs)
     return (P, R, F_1,evaluate[1],evaluate[2],evaluate[3])
 
 end
-
-
-# trueSeqs =    [1 7 2  3 8 10 10 10 10 10;2 6 9 2 3 1  7  10 10 10]
-# predictSeqs = [1 1 10 3 3 1  10 3   3 2 ;2 6 6 2 3 10 10 10 10 10]
-# f1 = countChunks(trueSeqs,predictSeqs)
-# println(f1)
-#
