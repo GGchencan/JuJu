@@ -18,7 +18,7 @@ Get cleaned voc which counts at leat min_freq
 add unk eos pad to dict
 """
 EpochSize = 10
-BatchSize = 100
+BatchSize = 1
 EmbedSize = 50
 HiddenSize = 300
 ModelFn = "final_model.bson"
@@ -47,10 +47,6 @@ function change_dim(Dim)
     X -> permutedims(X, Dim)
 end
 
-function BILSTM(EmbedSize, HiddenSize)
-    X -> BiLSTM(X, EmbedSize, HiddenSize)
-end
-
 model = Chain(
     lower_dim(DicSize),
     Dense(DicSize, EmbedSize),
@@ -69,7 +65,6 @@ function loss_with_mask(X, Y)
     W = ones(DimR, DimC)
     W[DimR,:] = zeros(DimC)
     L = crossentropy(model(X), LowerY; weight = W)
-    # print('loss ', l)
     Flux.truncate!(model)
     @show(L)
     return L
@@ -79,7 +74,6 @@ end
 function loss(X, Y)
     LowerY = lower_dim(ClassNum)(Y)
     L = crossentropy(model(X), LowerY)
-    # print('loss ', l)
     Flux.truncate!(model)
     @show(L)
     return L
@@ -91,10 +85,11 @@ function load_model(CheckPointFn)
 end
 
 
-Lr = 0.005
+Lr = 0.1
 Opt = SGD(params(model), Lr)
 
-Test = one_epoch(TestData, BatchSize, DicSize, ClassNum)
+test_sz = 1
+Test = one_epoch(TestData, test_sz, DicSize, ClassNum)
 Testd = Test(1)
 
 for i = 1 : EpochSize
@@ -103,11 +98,11 @@ for i = 1 : EpochSize
     for D in Data
         Flux.train!(loss, [D], Opt)
         X = Testd[1]
-        Output = upper_dim(ClassNum, BatchSize)(model(X))
+        Output = upper_dim(ClassNum, test_sz)(model(X))
         Predict = predict_label(Output.data)
         Truth = predict_label(Testd[2])
         print("accuray is \n")
-        print(count_chunks(Truth', Predict'))
+        print(countChunks(Truth, Predict))
     end
     save_cpu(model, "model")
 end
