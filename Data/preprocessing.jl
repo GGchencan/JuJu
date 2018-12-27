@@ -15,6 +15,17 @@ function padding(
                 padwidth = 1
                 )
 
+        """
+        padding
+                pad the input array and label to the desired length
+                :param arr        the input array in array{array} type
+                :param arr_y      the label corresponding to the arr
+                :param label_dict a dict stored the key and corresponding label
+                :param max_length the desired input length
+                :param padwidth   maybe the python author know the meaning......
+                :return           the array and corresponding label after padding
+        """
+
         for i in range(1; stop=length(arr))
                 diff = max_length - length(arr[i])
                 if diff > 0
@@ -23,6 +34,68 @@ function padding(
                 end
         end
         return arr, arr_y
+end
+
+function save_data(
+                word_dict,
+                label_dict,
+                trn_mat_x,
+                trn_mat_y,
+                test_mat_x,
+                test_mat_y
+                )
+
+        word_dict_str = ""
+        word_dict_str = word_dict_str * "EOF 1\n"
+        word_dict_str = word_dict_str * "pad 2\n"
+        word_dict_str = word_dict_str * "_null_ 3\n"
+
+        for key in keys(word_dict)
+                word_dict_str = word_dict_str * key * " " * string(word_dict[key]) * "\n"
+        end
+
+        label_dict_str = ""
+
+        for key in keys(label_dict)
+                label_dict_str = label_dict_str * key * " " * string(label_dict[key]) * "\n"
+        end
+
+        open("word_dict_julia.txt", "w") do f
+                write(f, word_dict_str)
+        end
+
+        open("label_dict_julia.txt", "w") do f
+                write(f, label_dict_str)
+        end
+
+        using BSON:@save
+        @save "trn_x.bson" trn_mat_x
+        @save "trn_y.bson" trn_mat_y
+        @save "test_x.bson" test_mat_x
+        @save "test_y.bson" test_mat_y
+end
+
+function count_word(trn_words, word_cnt_dict)
+        """
+        count_word
+                :param trn_words      a word list
+                :param word_cnt_dict  a dict recorded the count of each word
+                :return               a renewed dict recorded the count
+        """
+
+        for i in range(1;stop=length(trn_words))
+                if(trn_words[i] == "")
+                        continue
+                end
+                w = lowercase(split(trn_words[i], " ")[1])
+                if haskey(word_cnt_dict, w)
+                        word_cnt_dict[w] += 1
+                else
+                        word_cnt_dict[w] = 1
+                end
+        end
+
+        return word_cnt_dict
 end
 
 
@@ -44,17 +117,9 @@ end
 trn_words = split(train, "\r\n")
 tst_words = split(test, "\r\n")
 
-for i in range(1;stop=length(trn_words))
-        if(trn_words[i] == "")
-                continue
-        end
-        w = lowercase(split(trn_words[i], " ")[1])
-        if haskey(word_cnt_dict, w)
-                word_cnt_dict[w] += 1
-        else
-                word_cnt_dict[w] = 1
-        end
-end
+
+word_cnt_dict = count_word(trn_words, word_cnt_dict)
+
 
 word_to_num = 4
 label_to_num = 1
@@ -66,7 +131,7 @@ max_seq_len = -1
 cur_seq_x = []
 cur_seq_y = []
 stop_word=[",", ":", ";", ".", ""]
-
+# process ythe train data
 for word in trn_words
         global word_to_num
         global label_to_num
@@ -122,7 +187,7 @@ for word in trn_words
         cur_len += 1
 end
 
-
+# process the test sentences
 test_mat_x = []
 test_mat_y = []
 cur_len = 0
@@ -176,38 +241,10 @@ end
 
 label_dict["null"] = label_to_num
 
+
+# pading the processed data and save
 trn_mat_x, trn_mat_y = padding(trn_mat_x, trn_mat_y, label_dict)
 test_mat_x, test_mat_y = padding(test_mat_x, test_mat_y, label_dict)
 
-word_dict_str = ""
-word_dict_str = word_dict_str * "EOF 1\n"
-word_dict_str = word_dict_str * "pad 2\n"
-word_dict_str = word_dict_str * "_null_ 3\n"
 
-for key in keys(word_dict)
-        global word_dict_str
-        word_dict_str = word_dict_str * key * " " * string(word_dict[key]) * "\n"
-end
-
-label_dict_str = ""
-
-for key in keys(label_dict)
-        global label_dict_str
-        label_dict_str = label_dict_str * key * " " * string(label_dict[key]) * "\n"
-end
-
-open("word_dict_julia.txt", "w") do f
-        global word_dict_str
-        write(f, word_dict_str)
-end
-
-open("label_dict_julia.txt", "w") do f
-        global label_dict_str
-        write(f, label_dict_str)
-end
-
-using BSON:@save
-@save "trn_x.bson" trn_mat_x
-@save "trn_y.bson" trn_mat_y
-@save "test_x.bson" test_mat_x
-@save "test_y.bson" test_mat_y
+save_data(word_dict, label_dict, trn_mat_x, trn_mat_y, test_mat_x, test_mat_y)
