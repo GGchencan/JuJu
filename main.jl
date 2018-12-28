@@ -17,7 +17,7 @@ include("evaluate.jl")
 Get cleaned voc which counts at leat min_freq
 add unk eos pad to dict
 """
-EpochSize = 10
+EpochSize = 1
 BatchSize = 1
 EmbedSize = 50
 HiddenSize = 300
@@ -92,17 +92,56 @@ test_sz = 1
 Test = one_epoch(TestData, test_sz, DicSize, ClassNum)
 Testd = Test(1)
 
+
 for i = 1 : EpochSize
     println("epoch ", i)
     Data = one_epoch(TrainData, BatchSize, DicSize, ClassNum)
     for D in Data
         Flux.train!(loss, [D], Opt)
+        """
         X = Testd[1]
         Output = upper_dim(ClassNum, test_sz)(model(X))
         Predict = predict_label(Output.data)
         Truth = predict_label(Testd[2])
         print("accuray is \n")
         print(countChunks(Truth, Predict))
+        """
     end
     save_cpu(model, "model")
 end
+
+count_ = 0
+tmpSum1 = 0
+tmpSum2 = 0
+tmpSum3 = 0
+
+for d in Test
+    global count_
+    global tmpSum1
+    global tmpSum2
+    global tmpSum3
+    count_ = count_ + 1
+    x = d[1]
+    Output = upper_dim(ClassNum, BatchSize)(model(x))
+    Predict = predict_label(Output.data)
+    print("predict is ", Predict)
+    print("\n")
+    Truth = predict_label(d[2])
+    print("truth is ", Truth)
+    print("\n")
+    print("accuray is \n")
+    acc = countChunks(Truth,Predict)
+    tmpSum1 = tmpSum1 + acc[1]
+    tmpSum2 = tmpSum2 + acc[2]
+    tmpSum3 = tmpSum3 + acc[3]
+    #tmp = vcat(tmp, acc)
+    print(acc)
+end
+
+print("final1",tmpSum1/count_)
+print("final2",tmpSum2/count_)
+print("final3",tmpSum3/count_)
+
+print("tmpSum1", tmpSum1)
+print("tmpSum2", tmpSum2)
+print("tmpSum3", tmpSum3)
