@@ -10,8 +10,13 @@ bilstm = MyBiLSTM(in_dim, out_dim)
 data = Iterators.repeated((x, y), 10)
 loss(x, y) = Flux.mse(bilstm(x), y)
 println(loss(x,y))
+save_cpu(bilstm,"bilstm")
+println(loss(x,y))
+load_cpu(bilstm,"bilstm")
+println(loss(x,y))
 # later
 Lr = 0.5
 opt = SGD(params(bilstm), Lr)
 Flux.train!(loss, data, opt)
+println(loss(x,y))
 println(loss(x,y))
