@@ -68,11 +68,28 @@ function save_data(
                 write(f, label_dict_str)
         end
 
+        trn_mat_x = join(join.(trn_mat_x, " "), "\n")
+        trn_mat_y = join(join.(trn_mat_y, " "), "\n")
+        test_mat_x = join(join.(test_mat_x, " "), "\n")
+        test_mat_y = join(join.(test_mat_y, " "), "\n")
 
-        @save "trn_x.bson" trn_mat_x
-        @save "trn_y.bson" trn_mat_y
-        @save "test_x.bson" test_mat_x
-        @save "test_y.bson" test_mat_y
+        open("trn_x.txt", "w") do f
+                write(f, trn_mat_x)
+        end
+
+        open("trn_y.txt", "w") do f
+                write(f, trn_mat_y)
+        end
+
+        open("test_x.txt", "w") do f
+                write(f, test_mat_x)
+        end
+
+        open("test_y.txt", "w") do f
+                write(f, test_mat_y)
+        end
+
+
 end
 
 function count_word(trn_words, word_cnt_dict)
@@ -246,4 +263,3 @@ function construct_test_data(
 
         return test_mat_x, test_mat_y
 end
-
