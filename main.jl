@@ -131,16 +131,15 @@ for d in Test
     print("\n")
     print("accuray is \n")
     acc = countChunks(Truth,Predict)
-    tmpSum1 = tmpSum1 + acc[1]
-    tmpSum2 = tmpSum2 + acc[2]
-    tmpSum3 = tmpSum3 + acc[3]
+    tmpSum1 = tmpSum1 + acc[4]
+    tmpSum2 = tmpSum2 + acc[5]
+    tmpSum3 = tmpSum3 + acc[6]
     #tmp = vcat(tmp, acc)
     print(acc)
 end
 
-print("final1",tmpSum1/count_)
-print("final2",tmpSum2/count_)
-print("final3",tmpSum3/count_)
+print("Precision",tmpSum1/tmpSum3)
+print("Recall",tmpSum1/tmpSum2)
 
 print("tmpSum1", tmpSum1)
 print("tmpSum2", tmpSum2)
