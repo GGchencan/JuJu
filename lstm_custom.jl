@@ -213,6 +213,7 @@ function save_cpu(model,filename)
     @save filename model
 end
 
-function load_cpu(model, filename )
+function load_cpu(filename )
     @load filename model
+    return model
 end

@@ -12,6 +12,6 @@ bilstm = MyBiLSTM(in_dim, out_dim)
 loss(x, y) = Flux.mse(bilstm(x), y)
 println(loss(x,y))
 
-load_cpu(bilstm,"bilstm")
+bilstm = load_cpu("bilstm")
 
 println(loss(x,y))

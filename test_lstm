@@ -12,7 +12,7 @@ loss(x, y) = Flux.mse(bilstm(x), y)
 println(loss(x,y))
 save_cpu(bilstm,"bilstm")
 println(loss(x,y))
-load_cpu(bilstm,"bilstm")
+bilstm=load_cpu("bilstm")
 println(loss(x,y))
 # later
 Lr = 0.5
