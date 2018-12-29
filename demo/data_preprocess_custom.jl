@@ -16,7 +16,7 @@ function get_args()
     args = ARGS
 
     # check whether the input is legal
-    if length(args) > 2 || length(args) < 1
+    if length(args) > 3 || length(args) < 1
         error("please at least give the train data")
     end
 
@@ -33,10 +33,12 @@ stop_word = trn_data_result[4]
 trn_mat_x = trn_data_result[5]
 trn_mat_y = trn_data_result[6]
 
-if(length(args) == 2)
+if(length(args) == 3)
     test_path = args[2]
     test_mat_x, test_mat_y = construct_test_data(test_path, word_dict, label_dict, stop_word, max_seq_len)
-    save_data(word_dict, label_dict, trn_mat_x, trn_mat_y, test_mat_x, test_mat_y)
+    eval_path = args[3]
+    eval_mat_x, eval_mat_y = construct_test_data(test_path, word_dict, label_dict, stop_word, max_seq_len)
+    save_data(word_dict, label_dict, trn_mat_x, trn_mat_y, test_mat_x, test_mat_y, eval_mat_x, eval_mat_y)
 else
-    save_data(word_dict, label_dict, trn_mat_x, trn_mat_y, nothing, nothing)
+    save_data(word_dict, label_dict, trn_mat_x, trn_mat_y, nothing, nothing, nothing, nothing)
 end
