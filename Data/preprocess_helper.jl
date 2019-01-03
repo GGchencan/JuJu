@@ -42,7 +42,9 @@ function save_data(
                 trn_mat_x,
                 trn_mat_y,
                 test_mat_x,
-                test_mat_y
+                test_mat_y,
+                eval_mat_x,
+                eval_mat_y
                 )
 
         word_dict_str = ""
@@ -60,11 +62,11 @@ function save_data(
                 label_dict_str = label_dict_str * key * " " * string(label_dict[key]) * "\n"
         end
 
-        open("word_dict_julia.txt", "w") do f
+        open("word_dict.txt", "w") do f
                 write(f, word_dict_str)
         end
 
-        open("label_dict_julia.txt", "w") do f
+        open("label_dict.txt", "w") do f
                 write(f, label_dict_str)
         end
 
@@ -72,6 +74,8 @@ function save_data(
         trn_mat_y = join(join.(trn_mat_y, " "), "\n")
         test_mat_x = join(join.(test_mat_x, " "), "\n")
         test_mat_y = join(join.(test_mat_y, " "), "\n")
+        eval_mat_x = join(join.(eval_mat_x, " "), "\n")
+        eval_mat_y = join(join.(eval_mat_y, " "), "\n")
 
         open("trn_x.txt", "w") do f
                 write(f, trn_mat_x)
@@ -87,6 +91,14 @@ function save_data(
 
         open("test_y.txt", "w") do f
                 write(f, test_mat_y)
+        end
+
+        open("eval_x.txt", "w") do f
+                write(f, eval_mat_x)
+        end
+
+        open("eval_y.txt", "w") do f
+                write(f, eval_mat_y)
         end
 
 
