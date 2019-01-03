@@ -79,6 +79,7 @@ Test = one_epoch(TestData, BatchSize, DicSize, ClassNum)
 
 model = load_cpu("model")
 
+Flux.testmode!(model, false)
 for i = 1 : EpochSize
     println("epoch ", i)
     Data = one_epoch(TrainData, BatchSize, DicSize, ClassNum)
@@ -94,6 +95,8 @@ tmpSum1 = 0
 tmpSum2 = 0
 tmpSum3 = 0
 
+model = load_cpu("model-dropout")
+Flux.testmode!(model)
 for d in Test
     global count_
     global tmpSum1
