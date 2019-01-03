@@ -22,14 +22,14 @@ EpochSize = 2
 BatchSize = 10
 EmbedSize = 50
 HiddenSize = 300
-ModelFn = "final_model.bson"
 
-TrainData, TestData, Dic, LabelDic = read_file()
+TrainData, DevData, TestData, Dic, LabelDic = read_file()
 DicSize = length(Dic)
 ClassNum = length(LabelDic)
 
-println(DicSize)
-println(ClassNum)
+Test = one_epoch(TestData, BatchSize, DicSize, ClassNum)
+Dev = one_epoch(DevData, BatchSize, DicSize, ClassNum)
+
 """
 Get train/test batch data
 batch_size * seq_len * dic_size
@@ -47,6 +47,7 @@ end
 function change_dim(Dim)
     X -> permutedims(X, Dim)
 end
+
 
 model = Chain(
     lower_dim(DicSize),
@@ -72,50 +73,64 @@ function loss_with_mask(X, Y)
     return L
 end
 
-Lr = 0.1
-Opt = SGD(params(model), Lr)
 
-Test = one_epoch(TestData, BatchSize, DicSize, ClassNum)
+function eval_data(Data)
+    count_ = 0
+    tmpSum1 = 0
+    tmpSum2 = 0
+    tmpSum3 = 0
+    Flux.testmode!(model)
+    for d in Data
+        count_ = count_ + 1
+        x = d[1]
+        Output = upper_dim(ClassNum, BatchSize)(model(x))
+        Predict = predict_label(Output.data)
+        Truth = predict_label(d[2])
+        acc = countChunks(Truth,Predict)
+        tmpSum1 = tmpSum1 + acc[4]
+        tmpSum2 = tmpSum2 + acc[5]
+        tmpSum3 = tmpSum3 + acc[6]
+    end
+    P = tmpSum1 / tmpSum3
+    R = tmpSum1 / tmpSum2
+    F1 = 2 * P * R / (P + R)
+
+    println("processed some tokens with $(tmpSum2) phrases; found: $(tmpSum3) phrases; correct: $(tmpSum1)")
+    println( "precision: $(@sprintf("%.2f",P*100))%;  recall:  $(@sprintf("%.2f", R*100))%;  FB1:  $(@sprintf("%.2f",F1))")
+    return (P, R, F1)
+end
+
+
+function train(EpochSize, ModelDir, Opt, loss)
+    BestModel = "best_model"
+    BestPre = 0
+    for i = 1 : EpochSize
+        Flux.testmode!(model, false)
+        println("Epoch ", i)
+        Data = one_epoch(TrainData, BatchSize, DicSize, ClassNum)
+        TotalBatch = sizeof(Data)
+        BatchId = 0
+        for D in Data
+            Flux.train!(loss, [D], Opt)
+            BatchId = BatchId + 1
+            if BatchId % 10 == 0:
+                println("processed epoch $(i)/$(EpochSize), batch $(BatchId)/$(TotalBatch)")
+        end
+        save_cpu(model, "epoch-$(i)")
+        Devp, Devr, Devf = eval_data(Dev)
+        if Devp > BestPre
+            BestPre = Devp
+            save_cpu(model, BestModel)
+        end
+    end
+end
+
 
 model = load_cpu("model")
+# println(eval_data(Test))
+# println(eval_data(Dev))
 
-Flux.testmode!(model, false)
-for i = 1 : EpochSize
-    println("epoch ", i)
-    Data = one_epoch(TrainData, BatchSize, DicSize, ClassNum)
-    for D in Data
-        Flux.train!(loss_with_mask, [D], Opt)
-    end
-    save_cpu(model, "model-dropout")
-end
+Lr = 0.01
+Opt = SGD(params(model), Lr)
 
-
-count_ = 0
-tmpSum1 = 0
-tmpSum2 = 0
-tmpSum3 = 0
-
-model = load_cpu("model-dropout")
-Flux.testmode!(model)
-for d in Test
-    global count_
-    global tmpSum1
-    global tmpSum2
-    global tmpSum3
-    count_ = count_ + 1
-    x = d[1]
-    Output = upper_dim(ClassNum, BatchSize)(model(x))
-    Predict = predict_label(Output.data)
-    Truth = predict_label(d[2])
-    acc = countChunks(Truth,Predict)
-    tmpSum1 = tmpSum1 + acc[4]
-    tmpSum2 = tmpSum2 + acc[5]
-    tmpSum3 = tmpSum3 + acc[6]
-end
-
-println("Precision ",tmpSum1/tmpSum3)
-println("Recall ",tmpSum1/tmpSum2)
-
-println("tmpSum1 ", tmpSum1)
-println("tmpSum2 ", tmpSum2)
-println("tmpSum3 ", tmpSum3)
+ModelDir = ""

@@ -152,20 +152,20 @@ function countChunks(trueSeqs, predictSeqs)
     end
 
     if (evaluate[1] == 0)
-        println("processed some tokens with $(evaluate[2]) phrases; found: $(evaluate[3]) phrases; correct: 0")
+        # println("processed some tokens with $(evaluate[2]) phrases; found: $(evaluate[3]) phrases; correct: 0")
         return(0,0,0,0,0,0)
     end
 
     P = evaluate[1]/evaluate[3]
     R = evaluate[1]/evaluate[2]
     F_1 = 2*P*R / (P+R)
-    println("**********************")
-    println("processed some tokens with $(evaluate[2]) phrases; found: $(evaluate[3]) phrases; correct: $(evaluate[1])")
-    println( "precision: $(@sprintf("%.2f",P*100))%;  recall:  $(@sprintf("%.2f", R*100))%;  FB1:  $(@sprintf("%.2f",F_1))")
+    # println("**********************")
+    # println("processed some tokens with $(evaluate[2]) phrases; found: $(evaluate[3]) phrases; correct: $(evaluate[1])")
+    # println( "precision: $(@sprintf("%.2f",P*100))%;  recall:  $(@sprintf("%.2f", R*100))%;  FB1:  $(@sprintf("%.2f",F_1))")
     return (P, R, F_1,evaluate[1],evaluate[2],evaluate[3])
 
 end
 
-trueSeqs =    [1 7 2 3 8 10 10 10;2 6 9 2 3 10 10 10]
-predictSeqs = [1 1 2 3 3 3 10 10 ;2 6 6 2 3 4 10 10]
-f1 = countChunks(trueSeqs,predictSeqs)
+# trueSeqs =    [1 7 2 3 8 10 10 10;2 6 9 2 3 10 10 10]
+# predictSeqs = [1 1 2 3 3 3 10 10 ;2 6 6 2 3 4 10 10]
+# f1 = countChunks(trueSeqs,predictSeqs)

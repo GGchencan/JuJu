@@ -89,24 +89,27 @@ function read_file()
 
     TrainingDict = Dict()
     TestingDict = Dict()
-    TrainingDict['x'] = DelimitedFiles.readdlm("trn_x.txt", ' ', Int)
-    TrainingDict['y'] = DelimitedFiles.readdlm("trn_y.txt", ' ', Int)
-    TestingDict['x'] = DelimitedFiles.readdlm("test_x.txt", ' ', Int)
-    TestingDict['y'] = DelimitedFiles.readdlm("test_y.txt", ' ', Int)
+    DevDict = Dict()
+    TrainingDict['x'] = DelimitedFiles.readdlm("./demo/trn_x.txt", ' ', Int)
+    TrainingDict['y'] = DelimitedFiles.readdlm("./demo/trn_y.txt", ' ', Int)
+    TestingDict['x'] = DelimitedFiles.readdlm("./demo/test_x.txt", ' ', Int)
+    TestingDict['y'] = DelimitedFiles.readdlm("./demo/test_y.txt", ' ', Int)
+    DevDict['x'] = DelimitedFiles.readdlm("./demo/eval_x.txt", ' ', Int)
+    DevDict['y'] = DelimitedFiles.readdlm("./demo/eval_y.txt", ' ', Int)
 
     WordDict = Dict()
     LabelDict = Dict()
-    open("word_dict.txt") do f
+    open("./demo/word_dict.txt") do f
         for l in eachline(f)
             Arr = split(l)
             WordDict[Arr[1]] = parse(Int, Arr[2])
         end
     end
-    open("label_dict.txt") do f
+    open("./demo/label_dict.txt") do f
         for l in eachline(f)
             Arr = split(l)
             LabelDict[Arr[1]] = parse(Int, Arr[2])
         end
     end
-    return TrainingDict, TestingDict, WordDict, LabelDict
+    return TrainingDict, DevDict, TestingDict, WordDict, LabelDict
 end
