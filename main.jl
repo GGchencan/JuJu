@@ -7,6 +7,7 @@ using Flux: throttle
 using Flux: @epochs
 using Flux: @show
 using Flux.Optimise: SGD
+using Printf
 
 include("loader.jl")
 include("lstm_custom.jl")
@@ -17,8 +18,8 @@ include("evaluate.jl")
 Get cleaned voc which counts at leat min_freq
 add unk eos pad to dict
 """
-EpochSize = 1
-BatchSize = 1
+EpochSize = 2
+BatchSize = 10
 EmbedSize = 50
 HiddenSize = 300
 ModelFn = "final_model.bson"
@@ -52,6 +53,7 @@ model = Chain(
     Dense(DicSize, EmbedSize),
     upper_dim(EmbedSize, BatchSize),
     MyBiLSTM(EmbedSize, HiddenSize),
+    Dropout(0.5),
     lower_dim(HiddenSize * 2),
     Dense(HiddenSize * 2, ClassNum),
     softmax
@@ -70,45 +72,22 @@ function loss_with_mask(X, Y)
     return L
 end
 
-
-function loss(X, Y)
-    LowerY = lower_dim(ClassNum)(Y)
-    L = crossentropy(model(X), LowerY)
-    Flux.truncate!(model)
-    @show(L)
-    return L
-end
-
-
-function load_model(CheckPointFn)
-    load_cpu(model, CheckPointFn)
-end
-
-
 Lr = 0.1
 Opt = SGD(params(model), Lr)
 
-test_sz = 1
-Test = one_epoch(TestData, test_sz, DicSize, ClassNum)
-Testd = Test(1)
+Test = one_epoch(TestData, BatchSize, DicSize, ClassNum)
 
+model = load_cpu("model")
 
 for i = 1 : EpochSize
     println("epoch ", i)
     Data = one_epoch(TrainData, BatchSize, DicSize, ClassNum)
     for D in Data
-        Flux.train!(loss, [D], Opt)
-        """
-        X = Testd[1]
-        Output = upper_dim(ClassNum, test_sz)(model(X))
-        Predict = predict_label(Output.data)
-        Truth = predict_label(Testd[2])
-        print("accuray is \n")
-        print(countChunks(Truth, Predict))
-        """
+        Flux.train!(loss_with_mask, [D], Opt)
     end
-    save_cpu(model, "model")
+    save_cpu(model, "model-dropout")
 end
+
 
 count_ = 0
 tmpSum1 = 0
@@ -124,23 +103,16 @@ for d in Test
     x = d[1]
     Output = upper_dim(ClassNum, BatchSize)(model(x))
     Predict = predict_label(Output.data)
-    print("predict is ", Predict)
-    print("\n")
     Truth = predict_label(d[2])
-    print("truth is ", Truth)
-    print("\n")
-    print("accuray is \n")
     acc = countChunks(Truth,Predict)
     tmpSum1 = tmpSum1 + acc[4]
     tmpSum2 = tmpSum2 + acc[5]
     tmpSum3 = tmpSum3 + acc[6]
-    #tmp = vcat(tmp, acc)
-    print(acc)
 end
 
-print("Precision",tmpSum1/tmpSum3)
-print("Recall",tmpSum1/tmpSum2)
+println("Precision ",tmpSum1/tmpSum3)
+println("Recall ",tmpSum1/tmpSum2)
 
-print("tmpSum1", tmpSum1)
-print("tmpSum2", tmpSum2)
-print("tmpSum3", tmpSum3)
+println("tmpSum1 ", tmpSum1)
+println("tmpSum2 ", tmpSum2)
+println("tmpSum3 ", tmpSum3)
