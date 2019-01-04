@@ -116,13 +116,13 @@ function train(EpochSize, ModelDir, Opt, loss)
         Flux.testmode!(model, false)
         println("Epoch ", i)
         Data = one_epoch(TrainData, BatchSize, DicSize, ClassNum)
-        TotalBatch = sizeof(Data)
+        # TotalBatch = sizeof(Data)
         BatchId = 0
         for D in Data
             Flux.train!(loss, [D], Opt)
             BatchId = BatchId + 1
             if BatchId % 10 == 0
-                println("processed epoch $(i)/$(EpochSize), batch $(BatchId)/$(TotalBatch)")
+                println("processed epoch $(i)/$(EpochSize), batch $(BatchId)")
             end
         end
         save_cpu(model, "$(ModelDir)/epoch-$(i)")
