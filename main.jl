@@ -13,6 +13,7 @@ include("loader.jl")
 include("lstm_custom.jl")
 include("predict_label.jl")
 include("evaluate.jl")
+include("loadembedding.jl")
 
 """
 Get cleaned voc which counts at leat min_freq
@@ -20,8 +21,9 @@ add unk eos pad to dict
 """
 EpochSize = 2
 BatchSize = 10
-EmbedSize = 50
+EmbedSize = 300
 HiddenSize = 300
+Glove = false
 
 TrainData, DevData, TestData, Dic, LabelDic = read_file()
 DicSize = length(Dic)
@@ -48,10 +50,15 @@ function change_dim(Dim)
     X -> permutedims(X, Dim)
 end
 
+if Glove
+    EmbedLayer = load_embedding("./data/ner.dim300.vec", 300, Dic)
+else
+    EmbedLayer = Dense(DicSize, EmbedSize)
+end
 
 model = Chain(
     lower_dim(DicSize),
-    Dense(DicSize, EmbedSize),
+    EmbedLayer,
     upper_dim(EmbedSize, BatchSize),
     MyBiLSTM(EmbedSize, HiddenSize),
     Dropout(0.5),
@@ -102,8 +109,9 @@ end
 
 
 function train(EpochSize, ModelDir, Opt, loss)
-    BestModel = "best_model"
+    BestModel = "$(ModelDir)/best_model"
     BestPre = 0
+    print("train begin.")
     for i = 1 : EpochSize
         Flux.testmode!(model, false)
         println("Epoch ", i)
@@ -113,24 +121,27 @@ function train(EpochSize, ModelDir, Opt, loss)
         for D in Data
             Flux.train!(loss, [D], Opt)
             BatchId = BatchId + 1
-            if BatchId % 10 == 0:
+            if BatchId % 10 == 0
                 println("processed epoch $(i)/$(EpochSize), batch $(BatchId)/$(TotalBatch)")
+            end
         end
-        save_cpu(model, "epoch-$(i)")
+        save_cpu(model, "$(ModelDir)/epoch-$(i)")
         Devp, Devr, Devf = eval_data(Dev)
         if Devp > BestPre
             BestPre = Devp
             save_cpu(model, BestModel)
         end
     end
+    println(BestPre * 100)
 end
 
 
-model = load_cpu("model")
+# model = load_cpu("model")
 # println(eval_data(Test))
 # println(eval_data(Dev))
 
-Lr = 0.01
+Lr = 0.1
 Opt = SGD(params(model), Lr)
 
-ModelDir = ""
+ModelDir = "./model_dir"
+train(EpochSize, ModelDir, Opt, loss_with_mask)
