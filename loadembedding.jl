@@ -30,5 +30,5 @@ function load_embedding(embeddingfile, embdim, WordDict)
         weights[:,column] = v
     end
 
-    return Dense(param(weights), zeros(embdim), identity)
+    return Dense(weights, zeros(embdim), identity)
 end

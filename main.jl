@@ -19,11 +19,11 @@ include("loadembedding.jl")
 Get cleaned voc which counts at leat min_freq
 add unk eos pad to dict
 """
-EpochSize = 2
-BatchSize = 10
+EpochSize = 1
+BatchSize = 1
 EmbedSize = 300
 HiddenSize = 300
-Glove = false
+Glove = true
 
 TrainData, DevData, TestData, Dic, LabelDic = read_file()
 DicSize = length(Dic)
@@ -31,6 +31,7 @@ ClassNum = length(LabelDic)
 
 Test = one_epoch(TestData, BatchSize, DicSize, ClassNum)
 Dev = one_epoch(DevData, BatchSize, DicSize, ClassNum)
+TotalBatch = Int(21993 / BatchSize)
 
 """
 Get train/test batch data
@@ -51,7 +52,8 @@ function change_dim(Dim)
 end
 
 if Glove
-    EmbedLayer = load_embedding("./data/ner.dim300.vec", 300, Dic)
+    # EmbedLayer = load_embedding("./data/ner.dim300.vec", 300, Dic)
+    EmbedLayer = load_embedding("./data/glove.6B.300d.txt", 300, Dic)
 else
     EmbedLayer = Dense(DicSize, EmbedSize)
 end
@@ -111,18 +113,17 @@ end
 function train(EpochSize, ModelDir, Opt, loss)
     BestModel = "$(ModelDir)/best_model"
     BestPre = 0
-    print("train begin.")
+    println("train begin.")
     for i = 1 : EpochSize
         Flux.testmode!(model, false)
         println("Epoch ", i)
         Data = one_epoch(TrainData, BatchSize, DicSize, ClassNum)
-        # TotalBatch = sizeof(Data)
         BatchId = 0
         for D in Data
             Flux.train!(loss, [D], Opt)
             BatchId = BatchId + 1
             if BatchId % 10 == 0
-                println("processed epoch $(i)/$(EpochSize), batch $(BatchId)")
+                println("processed epoch $(i)/$(EpochSize), batch $(BatchId)/$(TotalBatch)")
             end
         end
         save_cpu(model, "$(ModelDir)/epoch-$(i)")
@@ -132,16 +133,21 @@ function train(EpochSize, ModelDir, Opt, loss)
             save_cpu(model, BestModel)
         end
     end
-    println(BestPre * 100)
+    println("dev accuracy is ", BestPre * 100)
+    eval_data(Test)
 end
 
 
-# model = load_cpu("model")
+
 # println(eval_data(Test))
 # println(eval_data(Dev))
 
-Lr = 0.1
+Lr = 0.05
 Opt = SGD(params(model), Lr)
 
 ModelDir = "./model_dir"
-train(EpochSize, ModelDir, Opt, loss_with_mask)
+model_fn = "$(ModelDir)/best_model"
+model = load_cpu(model_fn)
+eval_data(Dev)
+eval_data(Test)
+# train(EpochSize, ModelDir, Opt, loss_with_mask)

@@ -153,7 +153,7 @@ function countChunks(trueSeqs, predictSeqs)
 
     if (evaluate[1] == 0)
         # println("processed some tokens with $(evaluate[2]) phrases; found: $(evaluate[3]) phrases; correct: 0")
-        return(0,0,0,0,0,0)
+        return(0,0,0,evaluate[1],evaluate[2],evaluate[3])
     end
 
     P = evaluate[1]/evaluate[3]
