@@ -141,8 +141,6 @@ function train(EpochSize, ModelDir, Lr, loss)
     #eval_data(Test)
 end
 
-
-
 # println(eval_data(Test))
 # println(eval_data(Dev))
 
