@@ -19,7 +19,7 @@ include("loadembedding.jl")
 Get cleaned voc which counts at leat min_freq
 add unk eos pad to dict
 """
-EpochSize = 1
+EpochSize = 10
 BatchSize = 1
 EmbedSize = 300
 HiddenSize = 300
@@ -53,7 +53,9 @@ end
 
 if Glove
     # EmbedLayer = load_embedding("./data/ner.dim300.vec", 300, Dic)
-    EmbedLayer = load_embedding("./data/glove.6B.300d.txt", 300, Dic)
+    print("word embedding loading")
+    print("\n")
+    EmbedLayer = load_embedding("glove.6B.300d.txt", 300, Dic)
 else
     EmbedLayer = Dense(DicSize, EmbedSize)
 end
@@ -110,11 +112,12 @@ function eval_data(Data)
 end
 
 
-function train(EpochSize, ModelDir, Opt, loss)
+function train(EpochSize, ModelDir, Lr, loss)
     BestModel = "$(ModelDir)/best_model"
     BestPre = 0
     println("train begin.")
     for i = 1 : EpochSize
+        Opt = SGD(params(model), Lr)
         Flux.testmode!(model, false)
         println("Epoch ", i)
         Data = one_epoch(TrainData, BatchSize, DicSize, ClassNum)
@@ -127,14 +130,15 @@ function train(EpochSize, ModelDir, Opt, loss)
             end
         end
         save_cpu(model, "$(ModelDir)/epoch-$(i)")
-        Devp, Devr, Devf = eval_data(Dev)
-        if Devp > BestPre
-            BestPre = Devp
+        Lr = Lr * 0.90
+        Testp, Testr, Testf = eval_data(Test)
+        if Testp > BestPre
+            BestPre = Testp
             save_cpu(model, BestModel)
         end
     end
-    println("dev accuracy is ", BestPre * 100)
-    eval_data(Test)
+    println("Test accuracy is ", BestPre * 100)
+    #eval_data(Test)
 end
 
 
@@ -142,12 +146,10 @@ end
 # println(eval_data(Test))
 # println(eval_data(Dev))
 
-Lr = 0.05
-Opt = SGD(params(model), Lr)
-
+Lr0 = 0.1
 ModelDir = "./model_dir"
+train(EpochSize, ModelDir, Lr0, loss_with_mask)
 model_fn = "$(ModelDir)/best_model"
 model = load_cpu(model_fn)
 eval_data(Dev)
 eval_data(Test)
-# train(EpochSize, ModelDir, Opt, loss_with_mask)
