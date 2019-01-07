@@ -26,19 +26,19 @@ function construct_dict()
 
         :return WordDict and LabelDict
     """
-    
+
     WordDict = Dict()
     LabelDict = Dict()
-    open("word_dict.txt") do f
+    open("./demo/word_dict.txt") do f
         for l in eachline(f)
             Arr = split(l)
             WordDict[Arr[1]] = parse(Int, Arr[2])
         end
     end
-    open("label_dict.txt") do f
+    open("./demo/label_dict.txt") do f
         for l in eachline(f)
             Arr = split(l)
-            LabelDict[Arr[1]] = parse(Int, Arr[2])
+            LabelDict[Arr[2]] = Arr[1]
         end
     end
     return WordDict, LabelDict
@@ -52,8 +52,8 @@ function construct_model()
         modified based on the test part in main.jl
         :return model
     """
-    
-    model = load_cpu("model-dropout")
+
+    model = load_cpu("best_model")
     Flux.testmode!(model)
 
     return model
@@ -66,7 +66,7 @@ function encode_text(text, WordDict)
         this function gets a sentence as input,
         output the encoded sentence according to word_dict
         modified based on construct_test_data function in preprocess_helper,jl
-        
+
         :param text the input sentence
         :param WordDict the trained word_dict
         :return a onehot matrix contained the encoded sentence [1, length of sentence, NumberofWords]
@@ -75,9 +75,9 @@ function encode_text(text, WordDict)
     test_mat_x = []
     cur_len = 0
     cur_seq_x = []
-    
+
     stop_word=[",", ":", ";", ".", ""]
-    
+
 
     for word in split(text, " ")
 
@@ -86,7 +86,7 @@ function encode_text(text, WordDict)
             cur_len += 1
             push!(test_mat_x, cur_seq_x)
             continue
-        
+
         elseif word[1] == ""
                 continue
         end
@@ -112,7 +112,7 @@ function get_label(text)
         :param text the input text for the model to process
         :return the label string to show
     """
-    
+
     WordDict, LabelDict = construct_dict()
     ClassNum = length(LabelDict)
     split_text = encode_text(text, WordDict)
@@ -124,19 +124,19 @@ function get_label(text)
     split_sentence = split(text, " ")
 
     show_label = []
-    predict_label = []
+    predict_labels = []
 
     for ele in split_sentence
-        temp = [" " for i in range(1;length=min(5,length(ele)))]
+        temp = [" " for i in range(1;length=max(5,length(ele)))]
         push!(show_label, *(temp...))
     end
 
     for ele in Predict[1, :]
-        push!(predict_label, parse(string, ele))
+        push!(predict_labels, LabelDict[string(ele)])
     end
 
 
-    for (index, ele) in enumerate(predict_label)
+    for (index, ele) in enumerate(predict_labels)
         temp = [show_label[index]...]
         temp[1:length(ele)] = [ele...]
         show_label[index] = join(temp, "")
