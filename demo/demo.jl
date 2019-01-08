@@ -123,12 +123,16 @@ function get_label(text)
 
     split_sentence = split(text, " ")
 
+    show_text = []
     show_label = []
     predict_labels = []
 
     for ele in split_sentence
-        temp = [" " for i in range(1;length=max(5,length(ele)))]
+        temp = [' ' for i in range(1;length=max(5,length(ele)))]
         push!(show_label, *(temp...))
+
+        temp[1:length(ele)] = [ele...]
+        push!(show_text, join(temp, ""))
     end
 
     for ele in Predict[1, :]
@@ -142,7 +146,7 @@ function get_label(text)
         show_label[index] = join(temp, "")
     end
 
-    return join(show_label, " ")
+    return join(show_text, " "), join(show_label, " ")
 end
 
 
@@ -163,10 +167,10 @@ g[1:4, 3] = label
 
 function on_button_click(w)
     text = get_gtk_property(text_input, :text, String)
-    GAccessor.text(sentence, text)
-    label_text = get_label(text)
-    GAccessor.text(label, label_text)
 
+    text, label_text = get_label(text)
+    GAccessor.text(label, label_text)
+    GAccessor.text(sentence, text)
 end
 
 signal_connect(on_button_click, b, "clicked")
