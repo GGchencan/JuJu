@@ -19,11 +19,14 @@ include("loadembedding.jl")
 Get cleaned voc which counts at leat min_freq
 add unk eos pad to dict
 """
-EpochSize = 10
+EpochSize = 15
 BatchSize = 1
 EmbedSize = 300
 HiddenSize = 300
-Glove = true
+TotalLoss = 0
+
+
+Glove = True
 
 TrainData, DevData, TestData, Dic, LabelDic = read_file()
 DicSize = length(Dic)
@@ -31,7 +34,7 @@ ClassNum = length(LabelDic)
 
 Test = one_epoch(TestData, BatchSize, DicSize, ClassNum)
 Dev = one_epoch(DevData, BatchSize, DicSize, ClassNum)
-TotalBatch = Int(21993 / BatchSize)
+TotalBatch = Int(21990 / BatchSize)
 
 """
 Get train/test batch data
@@ -80,6 +83,9 @@ function loss_with_mask(X, Y)
     W[DimR,:] = zeros(DimC)
     L = crossentropy(model(X), LowerY; weight = W)
     Flux.truncate!(model)
+    global TotalLoss
+    TotalLoss = TotalLoss + L
+    @show(TotalLoss)
     @show(L)
     return L
 end
@@ -111,12 +117,16 @@ function eval_data(Data)
     return (P, R, F1)
 end
 
-
 function train(EpochSize, ModelDir, Lr, loss)
     BestModel = "$(ModelDir)/best_model"
     BestPre = 0
     println("train begin.")
+    DevHistory = []
+    TestHistory = []
+    LossHistory = []
     for i = 1 : EpochSize
+        global TotalLoss
+        TotalLoss = 0
         Opt = SGD(params(model), Lr)
         Flux.testmode!(model, false)
         println("Epoch ", i)
@@ -132,21 +142,30 @@ function train(EpochSize, ModelDir, Lr, loss)
         save_cpu(model, "$(ModelDir)/epoch-$(i)")
         Lr = Lr * 0.90
         Testp, Testr, Testf = eval_data(Test)
+        Devp, Devr, Devf = eval_data(Dev)
+        append!(DevHistory, Devp)
+        append!(TestHistory, Testp)
+        append!(LossHistory, TotalLoss)
         if Testp > BestPre
             BestPre = Testp
             save_cpu(model, BestModel)
         end
     end
     println("Test accuracy is ", BestPre * 100)
-    #eval_data(Test)
+    print(LossHistory)
+    print(TestHistory)
+    print(DevHistory)
+    return LossHistory, TestHistory, DevHistory
 end
+
+
 
 # println(eval_data(Test))
 # println(eval_data(Dev))
 
 Lr0 = 0.1
 ModelDir = "./model_dir"
-train(EpochSize, ModelDir, Lr0, loss_with_mask)
+LossHistory, TestHistory, DevHistory = train(EpochSize, ModelDir, Lr0, loss_with_mask)
 model_fn = "$(ModelDir)/best_model"
 model = load_cpu(model_fn)
 eval_data(Dev)
