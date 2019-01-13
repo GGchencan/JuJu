@@ -14,6 +14,16 @@
 # JuJu
 This is the first AI model implemented by Julia.
 
+# Note ---- some packages
+```julia
+julia> import Pkg
+julia> Pkg.add("Flux")
+julia> Pkg.add("ResumableFunctions")
+julia> Pkg.add("BSON")
+
+```
+
+  
 
 ## Note ---- how to add custom grad
 
