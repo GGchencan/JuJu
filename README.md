@@ -14,7 +14,7 @@
 # JuJu
 This is the first AI model implemented by Julia.
 
-# Note ---- some packages
+## Note ---- some packages
 ```julia
 julia> import Pkg
 julia> Pkg.add("Flux")
