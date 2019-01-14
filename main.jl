@@ -8,6 +8,7 @@ using Flux: @epochs
 using Flux: @show
 using Flux.Optimise: SGD
 using Printf
+using Logging
 
 include("loader.jl")
 include("lstm_custom.jl")
@@ -24,10 +25,7 @@ EpochSize = 10
 BatchSize = 10
 EmbedSize = 50
 HiddenSize = 300
-
-
 Glove = true
-
 
 TrainData, DevData, TestData, Dic, LabelDic = read_file()
 DicSize = length(Dic)
@@ -37,7 +35,6 @@ Test = one_epoch(TestData, BatchSize, DicSize, ClassNum)
 Dev = one_epoch(DevData, BatchSize, DicSize, ClassNum)
 TotalBatch = Int(21990 / BatchSize)
 
-
 """
 Get train/test batch data
 batch_size * seq_len * dic_size
@@ -46,11 +43,9 @@ function lower_dim(Dim)
     X -> reshape(X, (:, Dim))'
 end
 
-
 function upper_dim(EmbedDim, BatchSize)
     X -> reshape(X', (BatchSize, :, EmbedDim))
 end
-
 
 function change_dim(Dim)
     X -> permutedims(X, Dim)
@@ -76,8 +71,6 @@ model = Chain(
     softmax
     )
 
-
-
 function loss_with_mask(X, Y)
     #Flux.testmode!(model, false)
     LowerY = lower_dim(ClassNum)(Y)
@@ -94,7 +87,6 @@ function loss_with_mask(X, Y)
     #@show(L)
     return L
 end
-
 
 function eval_data(Data)
     count_ = 0
@@ -188,8 +180,6 @@ end
 
 Lr0 = 0.1
 ModelDir = "./model_dir"
-
-using Logging
 io = open("log.txt", "w+")
 logger = SimpleLogger(io)
 with_logger(logger) do
