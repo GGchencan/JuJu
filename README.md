@@ -113,3 +113,5 @@ sentence
 After your prepare your own data and seperate it as train, test, eval, use step2 in Getting started to process your own data and do the training.
 
 ## Results
+The result shows as following
+<img src="./demo/images/result.png">
