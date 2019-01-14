@@ -1,30 +1,95 @@
 # JuJu
-This is the first AI model implemented by Julia.
+This repo implements a NER model using Julia and Flux (glove + Bilstm + softmax)
 
+baseline performance : 85%
 
-## Note ---- how to add custom grad
+## Task
 
-- use marco `@grad` 
-  
-  1. a short piece of program(to real)
+Given a sentence, given a tag to each word (contain punctuation). The classic application is Named Entity Recognition. Here is an example.
 
-  ```julia
-  using Flux: @grad, TrackedReal, track
+```
+John   lives in New   York
+B-PER  O     O  B-LOC I-LOC
+```
 
-  data(x::TrackedReal) = x.data
-  tracker(x::TrackedReal) = x.tracker
+## Model
 
-  function f(a) = ...
+the code related to model generation
 
-  @grad f(a::Real) = f(data(a)), Δ -> (Δ * $da)
-  f(a::TrackedReal) = track(f, a) 
+```julia
+model = Chain(
+    lower_dim(DicSize),
+    EmbedLayer,
+    upper_dim(EmbedSize, BatchSize),
+    MyBiLSTM(EmbedSize, HiddenSize),
+    Dropout(0.5),
+    lower_dim(HiddenSize * 2),
+    Dense(HiddenSize * 2, ClassNum),
+    softmax
+    )
+```
 
-  ```
+1. an embedding layer to do word embedding, now we choose glove;
+2. run a bi-lstm on each sentence to extract contextual representation of each word;
+3. one dropout layer;
+4. one fully connected layer to do the decode.
 
-  2. to some function like softmax, the example extracted from `Flux/tracker/array.jl`
+## Getting started
 
-  ```julia
-  softmax(xs::TrackedArray) = track(softmax, xs)
+1. Download the initial data [(Conll2003 dataset)](https://www.clips.uantwerpen.be/conll2003/ner/)
 
-  @grad softmax(xs) = softmax(data(xs)), Δ -> (nobacksies(:softmax, ∇softmax(data(Δ), data(xs))),)
-  ```
+or
+
+```git
+git clone https://github.com/GGchencan/JuJu.git
+```
+
+we put the inital Conll2003 data in our demo folder
+
+2. use the data preprocess program to preprocess the data
+
+```julia
+julia data_preprocess_custom.jl train.txt test.txt dev.txt
+```
+
+this function will help you to build the dataset into six different data file, used for train, eval and test. The order of the parameters is the path to train data, test data and evaluation data.
+
+3. cd the main.jl, simply run the file
+
+```julia
+julia main.jl
+```
+
+wait for several minutes, the train process will be finished.
+
+4. make sure the generated model file exist in the JuJu folder, run the demo.jl to show the result of your training.
+
+```julia
+julia demo/demo.jl
+```
+
+the result is expected to like 
+
+## Prepare your own data
+
+The training data must be identical in the Conll2003 data format.
+
+A default data example
+
+```
+John B-PER
+lives O
+in O
+New B-LOC
+York I-LOC
+. O
+
+This O
+is O
+another O
+sentence
+```
+
+After your prepare your own data and seperate it as train, test, eval, use step2 in Getting started to process your own data and do the training.
+
+## Results
