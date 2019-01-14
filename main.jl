@@ -13,7 +13,7 @@ using Logging
 include("loader.jl")
 include("lstm_custom.jl")
 include("predict_label.jl")
-include("evaluate.jl")
+include("evaluate_.jl")
 include("loadembedding.jl")
 
 """
