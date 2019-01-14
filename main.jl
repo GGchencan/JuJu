@@ -2,6 +2,7 @@ using Flux
 using Flux: onehot
 using Flux: onehotbatch
 using Flux: crossentropy
+using Flux: glorot_uniform
 using Flux: reset!
 using Flux: throttle
 using Flux: @epochs
@@ -14,6 +15,7 @@ include("loader.jl")
 include("lstm_custom.jl")
 include("predict_label.jl")
 include("evaluate_.jl")
+include("Dense_m.jl")
 include("loadembedding.jl")
 
 """
@@ -24,7 +26,7 @@ EpochSize = 10
 BatchSize = 10
 EmbedSize = 50
 HiddenSize = 300
-Glove = true
+Glove = false
 
 TrainData, DevData, TestData, Dic, LabelDic = read_file()
 DicSize = length(Dic)
@@ -50,19 +52,25 @@ function change_dim(Dim)
     X -> permutedims(X, Dim)
 end
 
+# if Glove
+#     # EmbedLayer = load_embedding("./data/ner.dim300.vec", 300, Dic)
+#     print("word embedding loading")
+#     print("\n")
+#     EmbedLayer = load_embedding("glove.6B.50d.txt", 50, Dic)
+# else
+#     EmbedLayer = Dense(DicSize, EmbedSize)
+# end
 if Glove
-    # EmbedLayer = load_embedding("./data/ner.dim300.vec", 300, Dic)
-    print("word embedding loading")
-    print("\n")
-    EmbedLayer = load_embedding("glove.6B.50d.txt", 50, Dic)
+    Weight = load_embedding("glove.6B.300d.txt", EmbedSize, Dic)
 else
-    EmbedLayer = Dense(DicSize, EmbedSize)
+    Weight = glorot_uniform(EmbedSize, DicSize)
 end
 
 model = Chain(
-    lower_dim(DicSize),
-    EmbedLayer,
-    upper_dim(EmbedSize, BatchSize),
+    # lower_dim(DicSize),
+    # EmbedLayer,
+    # upper_dim(EmbedSize, BatchSize),
+    Dense_m(Weight),
     MyBiLSTM(EmbedSize, HiddenSize),
     Dropout(0.5),
     lower_dim(HiddenSize * 2),
@@ -191,4 +199,3 @@ model_fn = "$(ModelDir)/best_model"
 model = load_cpu(model_fn)
 eval_data(Dev)
 eval_data(Test)
-

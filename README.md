@@ -35,9 +35,7 @@ the code related to model generation
 
 ```julia
 model = Chain(
-    lower_dim(DicSize),
-    EmbedLayer,
-    upper_dim(EmbedSize, BatchSize),
+    Dense_m(Weight),
     MyBiLSTM(EmbedSize, HiddenSize),
     Dropout(0.5),
     lower_dim(HiddenSize * 2),
