@@ -16,7 +16,6 @@ include("predict_label.jl")
 include("evaluate.jl")
 include("loadembedding.jl")
 
-import Base.println, Suppressor.@suppress @suppress println(xs...) = open(f -> (println(f, xs...); println(STDOUT, xs...)), "bf.log", "a+")
 """
 Get cleaned voc which counts at leat min_freq
 add unk eos pad to dict
