@@ -1,7 +1,33 @@
+<a name="logo"/>
+<div align="center">
+<a href="https://julialang.org/" target="_blank">
+<img src="https://julialang.org/images/logo_hires.png" alt="Julia Logo" width="210" height="142"></img>
+</a>
+</div>
+
+
+
+[travis-img]: https://img.shields.io/travis/JuliaLang/julia/master.svg?label=Linux+/+macOS
+[appveyor-img]: https://img.shields.io/appveyor/ci/JuliaLang/julia/master.svg?label=Windows
+[coveralls-img]: https://img.shields.io/coveralls/github/JuliaLang/julia/master.svg?label=coveralls
+[codecov-img]: https://img.shields.io/codecov/c/github/JuliaLang/julia/master.svg?label=codecov
 # JuJu
 This repo implements a NER model using Julia and Flux (glove + Bilstm + softmax)
 
+<<<<<<< HEAD
 baseline performance : 85%
+=======
+## Note ---- some packages
+```julia
+julia> import Pkg
+julia> Pkg.add("Flux")
+julia> Pkg.add("ResumableFunctions")
+julia> Pkg.add("BSON")
+
+```
+
+  
+>>>>>>> 294f080bed3c1870e2c617efc8295c2c21c80247
 
 ## Task
 

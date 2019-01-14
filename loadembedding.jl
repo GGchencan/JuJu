@@ -23,9 +23,9 @@ function load_embedding(embeddingfile, embdim, WordDict)
     end
     wordnum = length(WordDict)
     weights = zeros(Float32,embdim, wordnum, )
-    defaultvec = rand(Float32,embdim)
+    # defaultvec = rand(Float32,embdim)
     for key in keys(WordDict)
-        v = get(word2vec,key, defaultvec)
+        v = get(word2vec,key, rand(Float32,embdim))
         column = WordDict[key]
         weights[:,column] = v
     end
