@@ -1,6 +1,8 @@
 using Test
-
+using Flux
+using Flux.Tracker
 include("../Dense_m.jl")
+include("../lstm_custom.jl")
 
 @testset "Dense_m test" begin
     word_num = 10
@@ -16,9 +18,7 @@ include("../Dense_m.jl")
     end
     @test layer(input_data) == expected_output
 end
-using Flux
-using Flux.Tracker
-include("../lstm_custom.jl")
+
 @testset "MyBiLSTM test" begin
     seq_len = 10
     batch = 3
