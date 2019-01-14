@@ -50,7 +50,7 @@ model = Chain(
 2. run a bi-lstm on each sentence to extract contextual representation of each word;
 3. one dropout layer;
 4. one fully connected layer to do the decode.
-
+1
 ## Getting started
 
 1. Download the initial data [(Conll2003 dataset)](https://www.clips.uantwerpen.be/conll2003/ner/)
@@ -116,4 +116,4 @@ After your prepare your own data and seperate it as train, test, eval, use step2
 The result shows as following:
 
 
-<img src="./demo/images/result.png">
+<img src="./demo/images/result1.png">
