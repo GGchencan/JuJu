@@ -15,18 +15,19 @@ include("predict_label.jl")
 include("evaluate.jl")
 include("loadembedding.jl")
 
+import Base.println, Suppressor.@suppress @suppress println(xs...) = open(f -> (println(f, xs...); println(STDOUT, xs...)), "bf.log", "a+")
 """
 Get cleaned voc which counts at leat min_freq
 add unk eos pad to dict
 """
-EpochSize = 15
-BatchSize = 1
-EmbedSize = 300
+EpochSize = 10
+BatchSize = 10
+EmbedSize = 50
 HiddenSize = 300
-TotalLoss = 0
 
 
-Glove = True
+Glove = true
+
 
 TrainData, DevData, TestData, Dic, LabelDic = read_file()
 DicSize = length(Dic)
@@ -35,6 +36,7 @@ ClassNum = length(LabelDic)
 Test = one_epoch(TestData, BatchSize, DicSize, ClassNum)
 Dev = one_epoch(DevData, BatchSize, DicSize, ClassNum)
 TotalBatch = Int(21990 / BatchSize)
+
 
 """
 Get train/test batch data
@@ -58,7 +60,7 @@ if Glove
     # EmbedLayer = load_embedding("./data/ner.dim300.vec", 300, Dic)
     print("word embedding loading")
     print("\n")
-    EmbedLayer = load_embedding("glove.6B.300d.txt", 300, Dic)
+    EmbedLayer = load_embedding("glove.6B.50d.txt", 50, Dic)
 else
     EmbedLayer = Dense(DicSize, EmbedSize)
 end
@@ -75,7 +77,9 @@ model = Chain(
     )
 
 
+
 function loss_with_mask(X, Y)
+    #Flux.testmode!(model, false)
     LowerY = lower_dim(ClassNum)(Y)
     DimR = size(LowerY)[1]
     DimC = size(LowerY)[2]
@@ -83,10 +87,11 @@ function loss_with_mask(X, Y)
     W[DimR,:] = zeros(DimC)
     L = crossentropy(model(X), LowerY; weight = W)
     Flux.truncate!(model)
-    global TotalLoss
-    TotalLoss = TotalLoss + L
-    @show(TotalLoss)
-    @show(L)
+    @info(L)
+    #global TotalLoss
+    #TotalLoss = TotalLoss + L
+    #@show(TotalLoss)
+    #@show(L)
     return L
 end
 
@@ -117,28 +122,48 @@ function eval_data(Data)
     return (P, R, F1)
 end
 
+function loss_custom(D)
+    #Flux.testmode!(model)
+    LossData = 0
+    for d in D
+        (X, Y) = d
+        LowerY = lower_dim(ClassNum)(Y)
+        DimR = size(LowerY)[1]
+        DimC = size(LowerY)[2]
+        W = ones(DimR, DimC)
+        W[DimR,:] = zeros(DimC)
+        LossData = LossData + crossentropy(model(X), LowerY; weight = W)
+    end
+    return LossData
+end
+
 function train(EpochSize, ModelDir, Lr, loss)
     BestModel = "$(ModelDir)/best_model"
     BestPre = 0
-    println("train begin.")
+    println("train begin")
     DevHistory = []
     TestHistory = []
     LossHistory = []
     for i = 1 : EpochSize
-        global TotalLoss
         TotalLoss = 0
         Opt = SGD(params(model), Lr)
         Flux.testmode!(model, false)
         println("Epoch ", i)
+        @info("epoch_start")
         Data = one_epoch(TrainData, BatchSize, DicSize, ClassNum)
         BatchId = 0
         for D in Data
+            #TotalLoss = TotalLoss + loss_custom([D])
+            #@show(TotalLoss)
+            #TotalLoss = TotalLoss + Flux.train!(loss, [D], Opt)
             Flux.train!(loss, [D], Opt)
+            #@show(TotalLoss)
             BatchId = BatchId + 1
-            if BatchId % 10 == 0
+            if BatchId % 100 == 0
                 println("processed epoch $(i)/$(EpochSize), batch $(BatchId)/$(TotalBatch)")
             end
         end
+        @info("epoch_end")
         save_cpu(model, "$(ModelDir)/epoch-$(i)")
         Lr = Lr * 0.90
         Testp, Testr, Testf = eval_data(Test)
@@ -158,15 +183,23 @@ function train(EpochSize, ModelDir, Lr, loss)
     return LossHistory, TestHistory, DevHistory
 end
 
-
-
 # println(eval_data(Test))
 # println(eval_data(Dev))
 
 Lr0 = 0.1
 ModelDir = "./model_dir"
-LossHistory, TestHistory, DevHistory = train(EpochSize, ModelDir, Lr0, loss_with_mask)
+
+using Logging
+io = open("log.txt", "w+")
+logger = SimpleLogger(io)
+with_logger(logger) do
+    LossHistory, TestHistory, DevHistory = train(EpochSize, ModelDir, Lr0, loss_with_mask)
+end
+flush(io)
+close(io)
+
 model_fn = "$(ModelDir)/best_model"
 model = load_cpu(model_fn)
 eval_data(Dev)
 eval_data(Test)
+
