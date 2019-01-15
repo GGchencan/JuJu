@@ -1,0 +1,228 @@
+2019-01-14 12:36:29,715:INFO: Loading the datasets...
+2019-01-14 12:36:29,869:INFO: - done.
+2019-01-14 12:36:29,869:INFO: use glove pretrained embedding, embedding dim: 50
+2019-01-14 12:36:30,689:INFO: words found in glove: 22947, total verb size: 26872, converage: 0.8539371836856208
+2019-01-14 12:36:33,906:INFO: Starting training for 15 epoch(s)
+2019-01-14 12:36:33,906:INFO: Epoch 1/15
+2019-01-14 12:36:45,323:INFO: - Train metrics: accuracy: 0.869 ; loss: 0.388
+2019-01-14 12:36:45,324:INFO: - validation dataset
+2019-01-14 12:36:46,410:INFO: - chunk accuracy
+2019-01-14 12:36:46,518:INFO: processed 5935 phrases; found: 5363 phrases; correct: 4295.
+2019-01-14 12:36:46,518:INFO: precision:  80.09%; recall:  72.37%; FB1:  76.03%
+2019-01-14 12:36:46,532:INFO: - classification accuracy
+2019-01-14 12:36:46,532:INFO: - Eval metrics : accuracy: 0.948 ; loss: 0.187
+2019-01-14 12:36:46,533:INFO: - test dataset
+2019-01-14 12:36:47,573:INFO: - chunk accuracy
+2019-01-14 12:36:47,672:INFO: processed 5636 phrases; found: 5229 phrases; correct: 4001.
+2019-01-14 12:36:47,672:INFO: precision:  76.52%; recall:  70.99%; FB1:  73.65%
+2019-01-14 12:36:47,686:INFO: - classification accuracy
+2019-01-14 12:36:47,686:INFO: - Eval metrics : accuracy: 0.938 ; loss: 0.207
+2019-01-14 12:36:47,800:INFO: - Found new best accuracy
+2019-01-14 12:36:47,800:INFO: Epoch 2/15
+2019-01-14 12:36:59,071:INFO: - Train metrics: accuracy: 0.954 ; loss: 0.151
+2019-01-14 12:36:59,071:INFO: - validation dataset
+2019-01-14 12:37:00,153:INFO: - chunk accuracy
+2019-01-14 12:37:00,266:INFO: processed 5935 phrases; found: 5560 phrases; correct: 4615.
+2019-01-14 12:37:00,266:INFO: precision:  83.00%; recall:  77.76%; FB1:  80.30%
+2019-01-14 12:37:00,280:INFO: - classification accuracy
+2019-01-14 12:37:00,280:INFO: - Eval metrics : accuracy: 0.959 ; loss: 0.146
+2019-01-14 12:37:00,281:INFO: - test dataset
+2019-01-14 12:37:01,326:INFO: - chunk accuracy
+2019-01-14 12:37:01,426:INFO: processed 5636 phrases; found: 5412 phrases; correct: 4241.
+2019-01-14 12:37:01,426:INFO: precision:  78.36%; recall:  75.25%; FB1:  76.77%
+2019-01-14 12:37:01,438:INFO: - classification accuracy
+2019-01-14 12:37:01,438:INFO: - Eval metrics : accuracy: 0.945 ; loss: 0.177
+2019-01-14 12:37:01,486:INFO: - Found new best accuracy
+2019-01-14 12:37:01,487:INFO: Epoch 3/15
+2019-01-14 12:37:12,787:INFO: - Train metrics: accuracy: 0.966 ; loss: 0.119
+2019-01-14 12:37:12,787:INFO: - validation dataset
+2019-01-14 12:37:13,804:INFO: - chunk accuracy
+2019-01-14 12:37:13,913:INFO: processed 5935 phrases; found: 5562 phrases; correct: 4763.
+2019-01-14 12:37:13,913:INFO: precision:  85.63%; recall:  80.25%; FB1:  82.86%
+2019-01-14 12:37:13,924:INFO: - classification accuracy
+2019-01-14 12:37:13,924:INFO: - Eval metrics : accuracy: 0.964 ; loss: 0.129
+2019-01-14 12:37:13,926:INFO: - test dataset
+2019-01-14 12:37:14,931:INFO: - chunk accuracy
+2019-01-14 12:37:15,032:INFO: processed 5636 phrases; found: 5376 phrases; correct: 4357.
+2019-01-14 12:37:15,032:INFO: precision:  81.05%; recall:  77.31%; FB1:  79.13%
+2019-01-14 12:37:15,047:INFO: - classification accuracy
+2019-01-14 12:37:15,047:INFO: - Eval metrics : accuracy: 0.950 ; loss: 0.164
+2019-01-14 12:37:15,095:INFO: - Found new best accuracy
+2019-01-14 12:37:15,096:INFO: Epoch 4/15
+2019-01-14 12:37:26,519:INFO: - Train metrics: accuracy: 0.969 ; loss: 0.107
+2019-01-14 12:37:26,519:INFO: - validation dataset
+2019-01-14 12:37:27,605:INFO: - chunk accuracy
+2019-01-14 12:37:27,720:INFO: processed 5935 phrases; found: 5654 phrases; correct: 4853.
+2019-01-14 12:37:27,720:INFO: precision:  85.83%; recall:  81.77%; FB1:  83.75%
+2019-01-14 12:37:27,734:INFO: - classification accuracy
+2019-01-14 12:37:27,734:INFO: - Eval metrics : accuracy: 0.966 ; loss: 0.120
+2019-01-14 12:37:27,736:INFO: - test dataset
+2019-01-14 12:37:28,782:INFO: - chunk accuracy
+2019-01-14 12:37:28,884:INFO: processed 5636 phrases; found: 5415 phrases; correct: 4406.
+2019-01-14 12:37:28,885:INFO: precision:  81.37%; recall:  78.18%; FB1:  79.74%
+2019-01-14 12:37:28,900:INFO: - classification accuracy
+2019-01-14 12:37:28,900:INFO: - Eval metrics : accuracy: 0.952 ; loss: 0.161
+2019-01-14 12:37:28,948:INFO: - Found new best accuracy
+2019-01-14 12:37:28,948:INFO: Epoch 5/15
+2019-01-14 12:37:40,251:INFO: - Train metrics: accuracy: 0.972 ; loss: 0.093
+2019-01-14 12:37:40,252:INFO: - validation dataset
+2019-01-14 12:37:41,323:INFO: - chunk accuracy
+2019-01-14 12:37:41,433:INFO: processed 5935 phrases; found: 5767 phrases; correct: 4961.
+2019-01-14 12:37:41,433:INFO: precision:  86.02%; recall:  83.59%; FB1:  84.79%
+2019-01-14 12:37:41,448:INFO: - classification accuracy
+2019-01-14 12:37:41,448:INFO: - Eval metrics : accuracy: 0.968 ; loss: 0.113
+2019-01-14 12:37:41,449:INFO: - test dataset
+2019-01-14 12:37:42,494:INFO: - chunk accuracy
+2019-01-14 12:37:42,598:INFO: processed 5636 phrases; found: 5539 phrases; correct: 4486.
+2019-01-14 12:37:42,598:INFO: precision:  80.99%; recall:  79.60%; FB1:  80.29%
+2019-01-14 12:37:42,613:INFO: - classification accuracy
+2019-01-14 12:37:42,613:INFO: - Eval metrics : accuracy: 0.955 ; loss: 0.154
+2019-01-14 12:37:42,662:INFO: - Found new best accuracy
+2019-01-14 12:37:42,662:INFO: Epoch 6/15
+2019-01-14 12:37:53,903:INFO: - Train metrics: accuracy: 0.968 ; loss: 0.090
+2019-01-14 12:37:53,903:INFO: - validation dataset
+2019-01-14 12:37:54,995:INFO: - chunk accuracy
+2019-01-14 12:37:55,106:INFO: processed 5935 phrases; found: 5701 phrases; correct: 4996.
+2019-01-14 12:37:55,106:INFO: precision:  87.63%; recall:  84.18%; FB1:  85.87%
+2019-01-14 12:37:55,120:INFO: - classification accuracy
+2019-01-14 12:37:55,120:INFO: - Eval metrics : accuracy: 0.970 ; loss: 0.108
+2019-01-14 12:37:55,121:INFO: - test dataset
+2019-01-14 12:37:56,166:INFO: - chunk accuracy
+2019-01-14 12:37:56,268:INFO: processed 5636 phrases; found: 5456 phrases; correct: 4507.
+2019-01-14 12:37:56,268:INFO: precision:  82.61%; recall:  79.97%; FB1:  81.27%
+2019-01-14 12:37:56,283:INFO: - classification accuracy
+2019-01-14 12:37:56,283:INFO: - Eval metrics : accuracy: 0.957 ; loss: 0.153
+2019-01-14 12:37:56,331:INFO: - Found new best accuracy
+2019-01-14 12:37:56,332:INFO: Epoch 7/15
+2019-01-14 12:38:07,653:INFO: - Train metrics: accuracy: 0.974 ; loss: 0.084
+2019-01-14 12:38:07,653:INFO: - validation dataset
+2019-01-14 12:38:08,680:INFO: - chunk accuracy
+2019-01-14 12:38:08,791:INFO: processed 5935 phrases; found: 5784 phrases; correct: 5020.
+2019-01-14 12:38:08,791:INFO: precision:  86.79%; recall:  84.58%; FB1:  85.67%
+2019-01-14 12:38:08,803:INFO: - classification accuracy
+2019-01-14 12:38:08,803:INFO: - Eval metrics : accuracy: 0.970 ; loss: 0.106
+2019-01-14 12:38:08,804:INFO: - test dataset
+2019-01-14 12:38:09,795:INFO: - chunk accuracy
+2019-01-14 12:38:09,897:INFO: processed 5636 phrases; found: 5529 phrases; correct: 4526.
+2019-01-14 12:38:09,897:INFO: precision:  81.86%; recall:  80.31%; FB1:  81.07%
+2019-01-14 12:38:09,909:INFO: - classification accuracy
+2019-01-14 12:38:09,909:INFO: - Eval metrics : accuracy: 0.956 ; loss: 0.158
+2019-01-14 12:38:09,956:INFO: - Found new best accuracy
+2019-01-14 12:38:09,957:INFO: Epoch 8/15
+2019-01-14 12:38:21,291:INFO: - Train metrics: accuracy: 0.978 ; loss: 0.071
+2019-01-14 12:38:21,292:INFO: - validation dataset
+2019-01-14 12:38:22,365:INFO: - chunk accuracy
+2019-01-14 12:38:22,476:INFO: processed 5935 phrases; found: 5768 phrases; correct: 5069.
+2019-01-14 12:38:22,476:INFO: precision:  87.88%; recall:  85.41%; FB1:  86.63%
+2019-01-14 12:38:22,490:INFO: - classification accuracy
+2019-01-14 12:38:22,491:INFO: - Eval metrics : accuracy: 0.972 ; loss: 0.102
+2019-01-14 12:38:22,492:INFO: - test dataset
+2019-01-14 12:38:23,536:INFO: - chunk accuracy
+2019-01-14 12:38:23,637:INFO: processed 5636 phrases; found: 5505 phrases; correct: 4580.
+2019-01-14 12:38:23,638:INFO: precision:  83.20%; recall:  81.26%; FB1:  82.22%
+2019-01-14 12:38:23,652:INFO: - classification accuracy
+2019-01-14 12:38:23,653:INFO: - Eval metrics : accuracy: 0.958 ; loss: 0.156
+2019-01-14 12:38:23,700:INFO: - Found new best accuracy
+2019-01-14 12:38:23,701:INFO: Epoch 9/15
+2019-01-14 12:38:35,111:INFO: - Train metrics: accuracy: 0.978 ; loss: 0.073
+2019-01-14 12:38:35,112:INFO: - validation dataset
+2019-01-14 12:38:36,131:INFO: - chunk accuracy
+2019-01-14 12:38:36,243:INFO: processed 5935 phrases; found: 5796 phrases; correct: 5102.
+2019-01-14 12:38:36,243:INFO: precision:  88.03%; recall:  85.96%; FB1:  86.98%
+2019-01-14 12:38:36,254:INFO: - classification accuracy
+2019-01-14 12:38:36,254:INFO: - Eval metrics : accuracy: 0.973 ; loss: 0.099
+2019-01-14 12:38:36,255:INFO: - test dataset
+2019-01-14 12:38:37,235:INFO: - chunk accuracy
+2019-01-14 12:38:37,338:INFO: processed 5636 phrases; found: 5524 phrases; correct: 4597.
+2019-01-14 12:38:37,338:INFO: precision:  83.22%; recall:  81.56%; FB1:  82.38%
+2019-01-14 12:38:37,350:INFO: - classification accuracy
+2019-01-14 12:38:37,350:INFO: - Eval metrics : accuracy: 0.959 ; loss: 0.156
+2019-01-14 12:38:37,398:INFO: - Found new best accuracy
+2019-01-14 12:38:37,399:INFO: Epoch 10/15
+2019-01-14 12:38:48,726:INFO: - Train metrics: accuracy: 0.985 ; loss: 0.057
+2019-01-14 12:38:48,727:INFO: - validation dataset
+2019-01-14 12:38:49,750:INFO: - chunk accuracy
+2019-01-14 12:38:49,862:INFO: processed 5935 phrases; found: 5811 phrases; correct: 5126.
+2019-01-14 12:38:49,862:INFO: precision:  88.21%; recall:  86.37%; FB1:  87.28%
+2019-01-14 12:38:49,873:INFO: - classification accuracy
+2019-01-14 12:38:49,873:INFO: - Eval metrics : accuracy: 0.974 ; loss: 0.097
+2019-01-14 12:38:49,874:INFO: - test dataset
+2019-01-14 12:38:50,869:INFO: - chunk accuracy
+2019-01-14 12:38:50,973:INFO: processed 5636 phrases; found: 5543 phrases; correct: 4619.
+2019-01-14 12:38:50,973:INFO: precision:  83.33%; recall:  81.96%; FB1:  82.64%
+2019-01-14 12:38:50,985:INFO: - classification accuracy
+2019-01-14 12:38:50,985:INFO: - Eval metrics : accuracy: 0.958 ; loss: 0.161
+2019-01-14 12:38:51,032:INFO: - Found new best accuracy
+2019-01-14 12:38:51,033:INFO: Epoch 11/15
+2019-01-14 12:39:02,401:INFO: - Train metrics: accuracy: 0.982 ; loss: 0.060
+2019-01-14 12:39:02,401:INFO: - validation dataset
+2019-01-14 12:39:03,475:INFO: - chunk accuracy
+2019-01-14 12:39:03,587:INFO: processed 5935 phrases; found: 5792 phrases; correct: 5134.
+2019-01-14 12:39:03,588:INFO: precision:  88.64%; recall:  86.50%; FB1:  87.56%
+2019-01-14 12:39:03,602:INFO: - classification accuracy
+2019-01-14 12:39:03,602:INFO: - Eval metrics : accuracy: 0.974 ; loss: 0.096
+2019-01-14 12:39:03,604:INFO: - test dataset
+2019-01-14 12:39:04,652:INFO: - chunk accuracy
+2019-01-14 12:39:04,755:INFO: processed 5636 phrases; found: 5528 phrases; correct: 4637.
+2019-01-14 12:39:04,755:INFO: precision:  83.88%; recall:  82.27%; FB1:  83.07%
+2019-01-14 12:39:04,770:INFO: - classification accuracy
+2019-01-14 12:39:04,770:INFO: - Eval metrics : accuracy: 0.959 ; loss: 0.161
+2019-01-14 12:39:04,818:INFO: - Found new best accuracy
+2019-01-14 12:39:04,819:INFO: Epoch 12/15
+2019-01-14 12:39:16,267:INFO: - Train metrics: accuracy: 0.981 ; loss: 0.059
+2019-01-14 12:39:16,267:INFO: - validation dataset
+2019-01-14 12:39:17,363:INFO: - chunk accuracy
+2019-01-14 12:39:17,480:INFO: processed 5935 phrases; found: 5807 phrases; correct: 5147.
+2019-01-14 12:39:17,480:INFO: precision:  88.63%; recall:  86.72%; FB1:  87.67%
+2019-01-14 12:39:17,495:INFO: - classification accuracy
+2019-01-14 12:39:17,495:INFO: - Eval metrics : accuracy: 0.975 ; loss: 0.098
+2019-01-14 12:39:17,496:INFO: - test dataset
+2019-01-14 12:39:18,535:INFO: - chunk accuracy
+2019-01-14 12:39:18,637:INFO: processed 5636 phrases; found: 5549 phrases; correct: 4639.
+2019-01-14 12:39:18,638:INFO: precision:  83.60%; recall:  82.31%; FB1:  82.95%
+2019-01-14 12:39:18,650:INFO: - classification accuracy
+2019-01-14 12:39:18,650:INFO: - Eval metrics : accuracy: 0.960 ; loss: 0.162
+2019-01-14 12:39:18,703:INFO: - Found new best accuracy
+2019-01-14 12:39:18,704:INFO: Epoch 13/15
+2019-01-14 12:39:29,945:INFO: - Train metrics: accuracy: 0.984 ; loss: 0.058
+2019-01-14 12:39:29,945:INFO: - validation dataset
+2019-01-14 12:39:30,975:INFO: - chunk accuracy
+2019-01-14 12:39:31,088:INFO: processed 5935 phrases; found: 5837 phrases; correct: 5148.
+2019-01-14 12:39:31,088:INFO: precision:  88.20%; recall:  86.74%; FB1:  87.46%
+2019-01-14 12:39:31,099:INFO: - classification accuracy
+2019-01-14 12:39:31,099:INFO: - Eval metrics : accuracy: 0.974 ; loss: 0.097
+2019-01-14 12:39:31,100:INFO: - test dataset
+2019-01-14 12:39:32,076:INFO: - chunk accuracy
+2019-01-14 12:39:32,179:INFO: processed 5636 phrases; found: 5583 phrases; correct: 4648.
+2019-01-14 12:39:32,179:INFO: precision:  83.25%; recall:  82.47%; FB1:  82.86%
+2019-01-14 12:39:32,191:INFO: - classification accuracy
+2019-01-14 12:39:32,192:INFO: - Eval metrics : accuracy: 0.959 ; loss: 0.165
+2019-01-14 12:39:32,216:INFO: Epoch 14/15
+2019-01-14 12:39:43,416:INFO: - Train metrics: accuracy: 0.985 ; loss: 0.052
+2019-01-14 12:39:43,417:INFO: - validation dataset
+2019-01-14 12:39:44,442:INFO: - chunk accuracy
+2019-01-14 12:39:44,554:INFO: processed 5935 phrases; found: 5825 phrases; correct: 5173.
+2019-01-14 12:39:44,555:INFO: precision:  88.81%; recall:  87.16%; FB1:  87.98%
+2019-01-14 12:39:44,566:INFO: - classification accuracy
+2019-01-14 12:39:44,566:INFO: - Eval metrics : accuracy: 0.975 ; loss: 0.097
+2019-01-14 12:39:44,567:INFO: - test dataset
+2019-01-14 12:39:45,546:INFO: - chunk accuracy
+2019-01-14 12:39:45,648:INFO: processed 5636 phrases; found: 5548 phrases; correct: 4650.
+2019-01-14 12:39:45,648:INFO: precision:  83.81%; recall:  82.51%; FB1:  83.15%
+2019-01-14 12:39:45,660:INFO: - classification accuracy
+2019-01-14 12:39:45,660:INFO: - Eval metrics : accuracy: 0.960 ; loss: 0.165
+2019-01-14 12:39:45,707:INFO: - Found new best accuracy
+2019-01-14 12:39:45,708:INFO: Epoch 15/15
+2019-01-14 12:39:57,095:INFO: - Train metrics: accuracy: 0.984 ; loss: 0.046
+2019-01-14 12:39:57,096:INFO: - validation dataset
+2019-01-14 12:39:58,183:INFO: - chunk accuracy
+2019-01-14 12:39:58,295:INFO: processed 5935 phrases; found: 5835 phrases; correct: 5162.
+2019-01-14 12:39:58,295:INFO: precision:  88.47%; recall:  86.98%; FB1:  87.71%
+2019-01-14 12:39:58,309:INFO: - classification accuracy
+2019-01-14 12:39:58,309:INFO: - Eval metrics : accuracy: 0.975 ; loss: 0.097
+2019-01-14 12:39:58,310:INFO: - test dataset
+2019-01-14 12:39:59,355:INFO: - chunk accuracy
+2019-01-14 12:39:59,458:INFO: processed 5636 phrases; found: 5582 phrases; correct: 4664.
+2019-01-14 12:39:59,458:INFO: precision:  83.55%; recall:  82.75%; FB1:  83.15%
+2019-01-14 12:39:59,473:INFO: - classification accuracy
+2019-01-14 12:39:59,473:INFO: - Eval metrics : accuracy: 0.960 ; loss: 0.166
