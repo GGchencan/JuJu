@@ -119,4 +119,4 @@ The result shows as following:
 <img src="./demo/images/result_dim=300.png">
 
 3.example2 epoch = 20, dim(dimension of word embedding) = 300
-<img src="./demo/images/result_dim=300_epoch=20Figure_1.png">
+<img src="./demo/images/result_dim=300_epoch=20.png">
