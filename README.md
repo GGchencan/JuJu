@@ -118,5 +118,5 @@ The result shows as following:
 2.example2 epoch = 10, dim(dimension of word embedding) = 300
 <img src="./demo/images/result_dim=300_epoch=10.png">
 
-3.example2 epoch = 20, dim(dimension of word embedding) = 300
+3.example3 epoch = 20, dim(dimension of word embedding) = 300
 <img src="./demo/images/result_dim=300_epoch=20.png">
