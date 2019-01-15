@@ -12,7 +12,8 @@
 [codecov-img]: https://img.shields.io/codecov/c/github/JuliaLang/julia/master.svg?label=codecov
 
 # JuJu
-This repo implements a NER model using Julia and Flux (glove + Bilstm + softmax)
+This repo implements a NER model using Julia and Flux (glove + Bilstm + softmax);
+
 Currently, we got chunk accuracy 78% on Conll2003 dataset.
 
 ## Dependency
@@ -43,7 +44,7 @@ model = Chain(
     )
 ```
 
-1. an embedding layer to do word embedding, now we choose glove(Here we use developing dataset to determine the hyperparameter embedding dim);
+1. an embedding layer to do word embedding, now we choose glove (Here we use the developing dataset to determine the hyperparameter embedding dim);
 2. run a bi-lstm on each sentence to extract contextual representation of each word;
 3. one dropout layer;
 4. one fully connected layer to do the decode.
