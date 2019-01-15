@@ -50,6 +50,7 @@ model = Chain(
 4. one fully connected layer to do the decode.
 ## Getting started
 
+
 1. Download the initial data [(Conll2003 dataset)](https://www.clips.uantwerpen.be/conll2003/ner/)
 
 or
@@ -112,7 +113,10 @@ After your prepare your own data and seperate it as train, test, eval, use step2
 The result shows as following:
 
 1.example1 epoch = 10, dim(dimension of word embedding) = 50
-<img src="./demo/images/result1.png">
+<img src="./demo/images/result_dim=50_epoch=10.png.png">
 
 2.example2 epoch = 10, dim(dimension of word embedding) = 300
 <img src="./demo/images/result_dim=300.png">
+
+3.example2 epoch = 20, dim(dimension of word embedding) = 300
+<img src="./demo/images/result_dim=300_epoch=20Figure_1">
