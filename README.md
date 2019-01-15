@@ -85,7 +85,6 @@ the result is expected to like
 
 <img src="./demo/images/demo2.png">
 
-
 ## Prepare your own data
 
 The training data must be identical in the Conll2003 data format.
