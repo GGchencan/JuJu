@@ -47,6 +47,7 @@ model = Chain(
 1. an embedding layer to do word embedding, now we choose glove;
 2. run a bi-lstm on each sentence to extract contextual representation of each word;
 3. one dropout layer;
+
 4. one fully connected layer to do the decode.
 1
 ## Getting started
@@ -113,5 +114,8 @@ After your prepare your own data and seperate it as train, test, eval, use step2
 ## Results
 The result shows as following:
 
-
+1.example1 epoch = 10, dim(dimension of word embedding) = 50
 <img src="./demo/images/result1.png">
+
+2.example2 epoch = 10, dim(dimension of word embedding) = 300
+<img src="./demo/images/result_dim=300.png">
