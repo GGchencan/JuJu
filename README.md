@@ -39,8 +39,7 @@ model = Chain(
     MyBiLSTM(EmbedSize, HiddenSize),
     Dropout(0.5),
     lower_dim(HiddenSize * 2),
-    Dense(HiddenSize * 2, ClassNum),
-    softmax
+    Dense(HiddenSize * 2, ClassNum),    softmax
     )
 ```
 
@@ -110,13 +109,14 @@ sentence
 After your prepare your own data and seperate it as train, test, eval, use step2 in Getting started to process your own data and do the training.
 
 ## Results
+
 The result shows as following:
 
-1.example1 epoch = 10, dim(dimension of word embedding) = 50
+1. example1 epoch = 10, dim(dimension of word embedding) = 50
 <img src="./demo/images/result_dim=50_epoch=10.png">
 
-2.example2 epoch = 10, dim(dimension of word embedding) = 300
+2. example2 epoch = 10, dim(dimension of word embedding) = 300
 <img src="./demo/images/result_dim=300_epoch=10.png">
 
-3.example3 epoch = 20, dim(dimension of word embedding) = 300
+3. example3 epoch = 20, dim(dimension of word embedding) = 300
 <img src="./demo/images/result_dim=300_epoch=20.png">
