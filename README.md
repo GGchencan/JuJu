@@ -119,3 +119,5 @@ The result shows as following:
 
 2.example2 epoch = 10, dim(dimension of word embedding) = 300
 <img src="./demo/images/result_dim=300.png">
+
+Here we use developing dataset to determine the hyperparameter embedding dim.
