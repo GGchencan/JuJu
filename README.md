@@ -13,8 +13,7 @@
 
 # JuJu
 This repo implements a NER model using Julia and Flux (glove + Bilstm + softmax)
-
-baseline performance : 85%
+Currently, we got chunk accuracy 78% on Conll2003 dataset.
 
 ## Dependency
 
