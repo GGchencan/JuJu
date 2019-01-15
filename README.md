@@ -44,12 +44,10 @@ model = Chain(
     )
 ```
 
-1. an embedding layer to do word embedding, now we choose glove;
+1. an embedding layer to do word embedding, now we choose glove(Here we use developing dataset to determine the hyperparameter embedding dim);
 2. run a bi-lstm on each sentence to extract contextual representation of each word;
 3. one dropout layer;
-
 4. one fully connected layer to do the decode.
-1
 ## Getting started
 
 1. Download the initial data [(Conll2003 dataset)](https://www.clips.uantwerpen.be/conll2003/ner/)
@@ -119,5 +117,3 @@ The result shows as following:
 
 2.example2 epoch = 10, dim(dimension of word embedding) = 300
 <img src="./demo/images/result_dim=300.png">
-
-Here we use developing dataset to determine the hyperparameter embedding dim.
