@@ -37,7 +37,7 @@ Steps = Int(NumExamples/BatchSize)
         N1 = size(RowSum)[1]
         M1 = size(RowSum)[2]
         Idx = M1
-        Null = 2 * BatchSize
+        Null = 10 * BatchSize
         for i in 0 : M1 - 1
             if RowSum[N1, Idx] != Null
                 break
@@ -62,7 +62,7 @@ NumWords means how many words in our dict, NumLabels means how many labels
         N1 = size(RowSum)[1]
         M1 = size(RowSum)[2]
         Idx = M1
-        Null = 2 * BatchSize
+        Null = 10 * BatchSize
         for i in 0 : M1 - 1
             if RowSum[N1, Idx] != Null
                 break
