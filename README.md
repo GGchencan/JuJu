@@ -116,7 +116,7 @@ The result shows as following:
 
 
 2. example2 epoch = 20, dim(dimension of word embedding) = 50
-<img src="./demo/images/result_dim=50_epoch=10.png">
+<img src="./demo/images/result_dim=50_epoch=20_.png">
 
 
 3. example3 epoch = 10, dim(dimension of word embedding) = 300
