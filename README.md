@@ -67,7 +67,7 @@ julia data_preprocess_custom.jl train.txt test.txt dev.txt```
 
 this function will help you to build the dataset into six different data file, used for train, eval and test. The order of the parameters is the path to train data, test data and evaluation data.
 
-3. cd the main.jl, simply run the file
+_3. cd the main.jl, simply run the file
 
 ```julia
 julia main.jl
@@ -123,4 +123,4 @@ picture loading
 <img src="./demo/images/result_dim=300_epoch=10.png">
 
 4. example4 epoch = 20, dim(dimension of word embedding) = 300
-<img src="./demo/images/result_dim=300_epoch=20.png">
+<img src="./demo/images/result_dim=300_epoch=20_.png">
