@@ -83,7 +83,7 @@ julia demo/demo.jl
 
 the result is expected to like 
 
-<img src="./demo/images/demo.png">
+<img src="./demo/images/demo_john.png">
 
 ## Prepare your own data
 
