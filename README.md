@@ -63,8 +63,7 @@ we put the inital Conll2003 data in our demo folder
 2. use the data preprocess program to preprocess the data
 
 ```julia
-julia data_preprocess_custom.jl train.txt test.txt dev.txt
-```
+julia data_preprocess_custom.jl train.txt test.txt dev.txt```
 
 this function will help you to build the dataset into six different data file, used for train, eval and test. The order of the parameters is the path to train data, test data and evaluation data.
 
