@@ -115,12 +115,9 @@ The result shows as following:
 <img src="./demo/images/result_dim=50_epoch=10.png">
 
 
-2. example2 epoch = 20, dim(dimension of word embedding) = 50
-picture loading
 
-
-3. example3 epoch = 10, dim(dimension of word embedding) = 300
+2. example2 epoch = 10, dim(dimension of word embedding) = 300
 <img src="./demo/images/result_dim=300_epoch=10.png">
 
-4. example4 epoch = 20, dim(dimension of word embedding) = 300
+3. example3 epoch = 20, dim(dimension of word embedding) = 300
 <img src="./demo/images/result_dim=300_epoch=20_.png">
