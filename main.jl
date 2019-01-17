@@ -61,7 +61,7 @@ end
 #     EmbedLayer = Dense(DicSize, EmbedSize)
 # end
 if Glove
-    Weight = load_embedding("glove.6B.300d.txt", EmbedSize, Dic)
+    Weight = load_embedding("glove.6B.50d.txt", EmbedSize, Dic)
 else
     Weight = glorot_uniform(EmbedSize, DicSize)
 end
@@ -79,12 +79,12 @@ model = Chain(
     )
 
 function loss_with_mask(X, Y)
-    #Flux.testmode!(model, false)
     LowerY = lower_dim(ClassNum)(Y)
     DimR = size(LowerY)[1]
     DimC = size(LowerY)[2]
     W = ones(DimR, DimC)
     W[DimR,:] = zeros(DimC)
+    #To be fixed, and we should exclude the padding token
     L = crossentropy(model(X), LowerY; weight = W)
     Flux.truncate!(model)
     @info(L)
@@ -121,20 +121,6 @@ function eval_data(Data)
     return (P, R, F1)
 end
 
-function loss_custom(D)
-    #Flux.testmode!(model)
-    LossData = 0
-    for d in D
-        (X, Y) = d
-        LowerY = lower_dim(ClassNum)(Y)
-        DimR = size(LowerY)[1]
-        DimC = size(LowerY)[2]
-        W = ones(DimR, DimC)
-        W[DimR,:] = zeros(DimC)
-        LossData = LossData + crossentropy(model(X), LowerY; weight = W)
-    end
-    return LossData
-end
 
 function train(EpochSize, ModelDir, Lr, loss)
     BestModel = "$(ModelDir)/best_model"
