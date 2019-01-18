@@ -16,6 +16,8 @@ This repo implements a NER model using Julia and Flux (glove + Bilstm + softmax)
 
 Currently, we got chunk accuracy 78% on Conll2003 dataset.
 
+## Why julia？
+https://www.oschina.net/news/99104/what-is-julia
 ## Dependency
 
 Please see the REQUIRE file
